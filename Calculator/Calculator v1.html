@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Welcome screen styling */
+        #welcome-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            background-color: white;
+            color: black;
+            font-size: 25px;
+            font-family: "Courier New", Courier, monospace; /* Font changed */
+            text-align: center;
+            flex-direction: column;
+            animation: fadeIn 2s ease-in-out; /* Fade-in effect for the welcome screen */
+        }
+
+        /* Creator name fade-in effect */
+        #creator-name {
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out 3s forwards; /* Delayed fade-in for creator's name */
+            font-size: 20px;
+            font-family: "Courier New", Courier, monospace;
+        }
+
+        /* Main content styling (calculator) */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            margin: 0;
+        }
+
+        .calculator {
+            width: 320px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: none; /* Hidden initially, will be shown after welcome screen */
+        }
+
+        .display {
+            width: 100%;
+            height: 50px;
+            font-size: 24px;
+            text-align: right;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #ffad;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 20px;
+            font-size: 20px;
+            border: none;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #ddd;
+        }
+
+        #bttn {
+            width: 220%;
+            background-color: #ffad38;
+        }
+
+        #bttn:hover {
+            background-color: #ca7700;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #333;
+        }
+
+        .calculator.dark-mode {
+            background-color: #444;
+            color: white;
+        }
+
+        .display.dark-mode {
+            background-color: #666;
+            color: white;
+            border: 1px solid #555;
+        }
+
+        .btn.dark-mode {
+            background-color: #555;
+            color: white;
+        }
+
+        .btn.dark-mode:hover {
+            background-color: #777;
+        }
+
+        /* Dark Mode Toggle Styles */
+        .toggle-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 30px;
+            background-color: #ccc;
+            border-radius: 30px;
+            padding: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .toggle-circle {
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .dark-mode .toggle-container {
+            background-color: #333;
+            
+        }
+
+        .dark-mode .toggle-circle {
+            transform: translateX(30px);
+            background-color: #ffad38;
+        }
+
+        /* Mode Text Styles */
+        .mode-text {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+            font-family: Monospace;
+        }
+
+        .dark-mode .mode-text {
+            color: white;
+        }
+
+        /* Typewriting animation */
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        #typewriter-text {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0; /* Start with width 0 for the typing effect */
+            animation: typing 3s steps(30) 1s 1 normal both; /* 3 seconds animation */
+        }
+
+        /* Fade-in effect */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen">
+        <div>
+            <p id="typewriter-text">Simple Calculator<p>
+            <p id="creator-name">Created by Rxt-Ritik</p>
+        </div>
+    </div>
+
+    <!-- Main Calculator Content (hidden initially) -->
+    <div class="calculator">
+        <input type="text" id="display" class="display" disabled>
+        <div class="buttons">
+            <button class="btn" onclick="appendToDisplay('1')">1</button>
+            <button class="btn" onclick="appendToDisplay('2')">2</button>
+            <button class="btn" onclick="appendToDisplay('3')">3</button>
+            <button class="btn" onclick="appendToDisplay('+')">+</button>
+
+            <button class="btn" onclick="appendToDisplay('4')">4</button>
+            <button class="btn" onclick="appendToDisplay('5')">5</button>
+            <button class="btn" onclick="appendToDisplay('6')">6</button>
+            <button class="btn" onclick="appendToDisplay('-')">-</button>
+
+            <button class="btn" onclick="appendToDisplay('7')">7</button>
+            <button class="btn" onclick="appendToDisplay('8')">8</button>
+            <button class="btn" onclick="appendToDisplay('9')">9</button>
+            <button class="btn" onclick="appendToDisplay('*')">*</button>
+
+            <button class="btn" onclick="appendToDisplay('0')">0</button>
+            <button class="btn" onclick="appendToDisplay('00')">00</button>
+            <button class="btn" onclick="clearDisplay()">C</button>
+            <button class="btn" onclick="appendToDisplay('/')">/</button>
+
+            <button class="btn" onclick="squareNumber()">x²</button>
+            <button class="btn" onclick="deleteLastCharacter()">Del</button>
+            <button id="bttn" class="btn" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <!-- Dark Mode Toggle Button -->
+    <div class="toggle-container" onclick="toggleDarkMode()">
+        <div class="toggle-circle"></div>
+    </div>
+
+    <!-- Mode Text -->
+    <div class="mode-text" id="modeText">Light Mode</div>
+
+    <script>
+        // Append value to display
+        function appendToDisplay(value) {
+            document.getElementById('display').value += value;
+        }
+
+        // Clear display
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+
+        // Delete the last character from the display
+        function deleteLastCharacter() {
+            const currentDisplay = document.getElementById('display').value;
+            document.getElementById('display').value = currentDisplay.slice(0, -1);
+        }
+
+        // Calculate the expression in the display
+        function calculate() {
+            try {
+                const result = eval(document.getElementById('display').value);
+                document.getElementById('display').value = result;
+            } catch (error) {
+                document.getElementById('display').value = 'Error';
+            }
+        }
+
+        // Calculate the square of the number in the display
+        function squareNumber() {
+            const currentDisplay = document.getElementById('display').value;
+            if (currentDisplay) {
+                const square = Math.pow(parseFloat(currentDisplay), 2);
+                document.getElementById('display').value = square;
+            }
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            document.querySelector('.calculator').classList.toggle('dark-mode');
+            document.querySelector('.display').classList.toggle('dark-mode');
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach((btn) => {
+                btn.classList.toggle('dark-mode');
+            });
+
+            // Update the mode text
+            const modeText = document.getElementById('modeText');
+            if (document.body.classList.contains('dark-mode')) {
+                modeText.textContent = 'Dark Mode';
+            } else {
+                modeText.textContent = 'Light Mode';
+            }
+        }
+
+        // Show calculator and hide welcome screen after 6 seconds
+        setTimeout(function() {
+            document.getElementById('welcome-screen').style.display = 'none'; // Hide welcome screen
+            document.querySelector('.calculator').style.display = 'block'; // Show calculator
+           document.querySelector('.toggle-container').style.display = 'block'; 
+        }, 6000); // 6 seconds delay (considering typewriter animation duration)
+    </script>
+</body>
+</html>
