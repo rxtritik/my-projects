@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TERMINAL // ACCESS</title>
+
+<style>
+:root{
+--hacker-green:#00ff41;
+--dim-green:rgba(0,255,65,.2);
+--bg-black:#050505;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Courier New,monospace}
+
+body{
+background:var(--bg-black);
+color:var(--hacker-green);
+height:100vh;
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+#matrix{
+position:fixed;
+inset:0;
+opacity:.15;
+z-index:-1;
+}
+
+body::after{
+content:"";
+position:absolute;
+inset:0;
+background:
+linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,.25) 50%),
+linear-gradient(90deg, rgba(255,0,0,.04), rgba(0,255,0,.03), rgba(0,0,255,.04));
+background-size:100% 2px,3px 100%;
+pointer-events:none;
+z-index:1000;
+}
+
+#bootScreen{
+position:fixed;
+inset:0;
+background:black;
+z-index:3000;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.boot-box{
+width:90%;
+max-width:420px;
+border:1px solid var(--hacker-green);
+padding:20px;
+background:rgba(0,20,0,.8);
+box-shadow:0 0 20px var(--dim-green);
+font-size:.75rem;
+line-height:1.6;
+}
+
+.boot-title{
+font-size:1.1rem;
+margin-bottom:10px;
+}
+
+.cursor{animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0}}
+#mainUI{
+display:none;
+width:100%;
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.interface-container{
+width:90%;
+max-width:400px;
+border:1px solid var(--hacker-green);
+padding:20px;
+background:rgba(0,20,0,.85);
+box-shadow:0 0 25px var(--dim-green);
+}
+
+.terminal-header{
+font-size:.8rem;
+border-bottom:1px solid var(--hacker-green);
+padding-bottom:10px;
+margin-bottom:20px;
+display:flex;
+justify-content:space-between;
+}
+
+.stats-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-bottom:25px;
+font-size:.7rem;
+}
+
+.stat-box{
+border:1px solid var(--dim-green);
+padding:10px;
+}
+
+.loading-bar-container{
+width:100%;
+height:4px;
+background:#002200;
+margin:15px 0;
+overflow:hidden;
+}
+
+.loading-bar-fill{
+height:100%;
+width:0%;
+background:var(--hacker-green);
+box-shadow:0 0 10px var(--hacker-green);
+transition:width .08s linear;
+}
+
+#log{
+font-size:.6rem;
+height:70px;
+overflow:hidden;
+margin-bottom:20px;
+color:#00aa33;
+}
+
+.hacker-btn{
+width:100%;
+background:transparent;
+border:1px solid var(--hacker-green);
+color:var(--hacker-green);
+padding:14px;
+cursor:pointer;
+letter-spacing:2px;
+text-transform:uppercase;
+transition:.2s;
+}
+
+.hacker-btn:hover{
+background:var(--hacker-green);
+color:black;
+box-shadow:0 0 30px var(--hacker-green);
+}
+
+.access-screen{
+position:fixed;
+inset:0;
+background:black;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+z-index:2000;
+opacity:0;
+pointer-events:none;
+transition:.4s;
+}
+
+.access-screen.active{
+opacity:1;
+pointer-events:auto;
+}
+
+.access-screen h1{
+font-size:2rem;
+letter-spacing:4px;
+margin-bottom:15px;
+text-shadow:0 0 20px var(--hacker-green);
+}
+
+.access-screen p{
+font-size:.8rem;
+opacity:.8;
+}
+/* Blink when ready */
+.hacker-btn.ready{
+    animation: btnBlink 1s infinite;
+}
+
+@keyframes btnBlink{
+    0%   { box-shadow:0 0 5px #00ff41; }
+    50%  { box-shadow:0 0 25px #00ff41; }
+    100% { box-shadow:0 0 5px #00ff41; }
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+<div id="bootScreen">
+    <div class="boot-box" id="bootLog">
+        <div class="boot-title">WAKE UP SYSTEM<span class="cursor">_</span></div>
+        > Initializing power bus...<br>
+        > Memory check...<br>
+        > Loading kernel modules...
+    </div>
+</div>
+<div id="mainUI">
+
+<div class="interface-container">
+
+    <div class="terminal-header">
+        <span>STATUS: ENCRYPTED</span>
+        <span id="timestamp"></span>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-box">TRACING: <span id="trace">0%</span></div>
+        <div class="stat-box">NODES: 14/22</div>
+    </div>
+
+    <h2 style="font-size:1.1rem;margin-bottom:6px;">DECRYPTING DATA_VOID...</h2>
+
+    <div class="loading-bar-container">
+        <div class="loading-bar-fill" id="loader"></div>
+    </div>
+
+    <div id="log">
+        > Initializing handshake...<br>
+        > Bypassing firewall...<br>
+        > Accessing secure layer...
+    </div>
+
+    <button class="hacker-btn" id="breachBtn">INITIALIZE BREACH</button>
+</div>
+
+</div>
+
+<div class="access-screen" id="accessScreen">
+    <h1>ACCESS GRANTED<span class="cursor">_</span></h1>
+    <p>SECURE CHANNEL ESTABLISHED</p>
+</div>
+
+
+<script>
+
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+}
+resize();
+addEventListener("resize",resize);
+
+const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&@";
+const size=10;
+let cols,drops;
+
+function setupMatrix(){
+cols=Math.floor(canvas.width/size);
+drops=Array(cols).fill(1);
+}
+setupMatrix();
+
+function drawMatrix(){
+ctx.fillStyle="rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#00ff41";
+ctx.font=size+"px monospace";
+
+for(let i=0;i<drops.length;i++){
+const t=chars[Math.floor(Math.random()*chars.length)];
+ctx.fillText(t,i*size,drops[i]*size);
+
+if(drops[i]*size>canvas.height && Math.random()>0.975)
+drops[i]=0;
+
+drops[i]++;
+}
+}
+setInterval(drawMatrix,33);
+
+const bootLog=document.getElementById("bootLog");
+const bootScreen=document.getElementById("bootScreen");
+const mainUI=document.getElementById("mainUI");
+
+const bootLines=[
+"> Power rails online",
+"> CPU microcode loaded",
+"> Secure enclave ready",
+"> Storage mounted",
+"> Network interface ready",
+"> Starting core services"
+];
+
+let bootIndex=0;
+
+const bootTimer=setInterval(()=>{
+if(bootIndex<bootLines.length){
+bootLog.innerHTML+= "<br>"+bootLines[bootIndex++];
+}else{
+clearInterval(bootTimer);
+setTimeout(()=>{
+bootScreen.style.display="none";
+mainUI.style.display="flex";
+startTerminal();
+},800);
+}
+},350);
+function updateTime(){
+document.getElementById("timestamp").innerText=
+new Date().toLocaleTimeString();
+}
+updateTime();
+setInterval(updateTime,1000);
+
+let progress=0;
+let running=true;
+
+const loader=document.getElementById("loader");
+const trace=document.getElementById("trace");
+const logBox=document.getElementById("log");
+
+const logLines=[
+"> Protocol X-22 active",
+"> Routing via proxy node",
+"> Injecting payload",
+"> Escalating privileges",
+"> Kernel access granted",
+"> Tunnel stabilized"
+];
+
+function pushLog(){
+logBox.innerHTML+="<br>"+logLines[Math.floor(Math.random()*logLines.length)];
+logBox.scrollTop=logBox.scrollHeight;
+}
+
+function loopLoader(){
+
+    if(!running) return;
+
+    progress += Math.random()*2.2;
+
+    if(progress >= 100){
+        progress = 100;
+
+        loader.style.width = "100%";
+        trace.innerText = "100%";
+        btn.classList.add("ready");
+
+        return;
+    }
+
+    loader.style.width = progress+"%";
+    trace.innerText = Math.floor(progress)+"%";
+
+    if(Math.random()>.88) pushLog();
+
+    setTimeout(loopLoader,90);
+}
+
+
+function startTerminal(){
+loopLoader();
+}
+
+const btn=document.getElementById("breachBtn");
+const access=document.getElementById("accessScreen");
+
+btn.onclick=()=>{
+if(progress<100){
+pushLog();
+pushLog();
+return;
+}
+
+running=false;
+pushLog();pushLog();pushLog();
+
+if(navigator.vibrate)
+navigator.vibrate([20,60,20]);
+
+setTimeout(()=>{
+access.classList.add("active");
+},600);
+
+setTimeout(()=>{
+resetTerminal();
+},4000);
+};
+
+function resetTerminal(){
+access.classList.remove("active");
+
+progress=0;
+loader.style.width="0%";
+trace.innerText="0%";
+running=true;
+
+logBox.innerHTML=
+"> Reinitializing core...<br>"+
+"> New session created...<br>"+
+"> Awaiting command...";
+
+loopLoader();
+}
+</script>
+
+</body>
+</html>
