@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PORTFOLIO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Inter",sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:
+      radial-gradient(700px 350px at 10% 10%, #60a5fa33, transparent),
+      radial-gradient(600px 350px at 90% 20%, #c084fc33, transparent),
+      radial-gradient(600px 350px at 50% 90%, #34d39933, transparent),
+      #0b0f19;
+    color:#fff;
+}
+
+.wrapper{
+    max-width:1200px;
+    margin:auto;
+    padding:64px 24px;
+}
+
+.header{
+    max-width:760px;
+    margin-bottom:64px;
+}
+
+.header span{
+    color:#8b9bff;
+    font-weight:600;
+    letter-spacing:.12em;
+    font-size:.75rem;
+}
+
+.header h1{
+    margin-top:14px;
+    font-size:clamp(2.2rem,4vw,3.2rem);
+    font-weight:800;
+    letter-spacing:-0.03em;
+    line-height:1.1;
+}
+
+.header p{
+    margin-top:14px;
+    color:#cfd6ff;
+    font-size:1rem;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    gap:22px;
+}
+
+.card{
+    grid-column:span 4;
+    padding:28px;
+    border-radius:18px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border:1px solid rgba(255,255,255,0.15);
+    box-shadow:0 20px 40px rgba(0,0,0,.35);
+    transition:transform .45s ease, box-shadow .45s ease;
+    transform:translateY(40px);
+}
+
+.card:hover{
+    transform:translateY(-6px) scale(1.01);
+    box-shadow:0 30px 70px rgba(0,0,0,.6);
+}
+
+.card.big{
+    grid-column:span 8;
+}
+
+
+.icon{
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,#7dd3fc,#c084fc);
+    color:#081018;
+    font-weight:800;
+    margin-bottom:18px;
+    font-size:.75rem;
+}
+
+.card h3{
+    font-size:1.25rem;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.card p{
+    font-size:.95rem;
+    color:#d5dcff;
+    line-height:1.5;
+}
+
+
+.links{
+    margin-top:16px;
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+}
+
+.links a{
+    text-decoration:none;
+    color:#fff;
+    font-size:.8rem;
+    padding:7px 14px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.25);
+    transition:.3s;
+}
+
+.links a:hover{
+    background:#fff;
+    color:#081018;
+}
+
+.bar{
+    margin-top:16px;
+    height:6px;
+    background:rgba(255,255,255,.15);
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#60a5fa,#c084fc);
+    border-radius:999px;
+    transition:width 1.2s ease;
+}
+
+@media(max-width:900px){
+    .card,
+    .card.big{
+        grid-column:span 12;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+    <div class="header">
+        <span>RXT · DEVELOPER</span>
+        <h1>Building modern web & Android experiences</h1>
+        <p>
+            Personal infographic section for my portfolio – focused on web development,
+            Android / kernel projects and content creation.
+        </p>
+    </div>
+
+    <div class="grid">
+
+        <div class="card big">
+            <div class="icon">ME</div>
+            <h3>About RxtHub</h3>
+            <p>
+                I am a developer focused on modern web interfaces and Android / kernel level
+                customization. I enjoy building minimal, animated and performance-focused
+                projects for real-world use.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="icon">SK</div>
+            <h3>Skills</h3>
+            <p>HTML, CSS, JavaScript, Python, Android & Kernel development.</p>
+
+            <div class="bar">
+                <div class="fill" data-fill="88"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon">PR</div>
+            <h3>Projects</h3>
+            <p>
+                Custom ROM builds, kernel compilation, UI tools, portfolio components and
+                experimental web apps.
+            </p>
+
+            <div class="bar">
+                <div class="fill" data-fill="80"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon">YT</div>
+            <h3>YouTube</h3>
+            <p>
+                Tutorials and experiments related to Android, development tools and UI work.
+            </p>
+
+            <div class="links">
+                <a href="https://www.youtube.com/@rxthub" target="_blank">Visit channel</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon">CT</div>
+            <h3>Contact</h3>
+            <p>Let’s collaborate on development or open-source projects.</p>
+
+            <div class="links">
+                <a href="mailto:rxtritik@gmail.com">Email</a>
+                <a href="https://github.com/rxtritik" target="_blank">GitHub</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+const cards = document.querySelectorAll(".card");
+
+const observer = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+        if(e.isIntersecting){
+            e.target.style.opacity = 1;
+            e.target.style.transform = "translateY(0)";
+
+            const bars = e.target.querySelectorAll(".fill");
+            bars.forEach(b=>{
+                b.style.width = b.dataset.fill + "%";
+            });
+
+            observer.unobserve(e.target);
+        }
+    });
+},{threshold:0.2});
+
+cards.forEach(c=>observer.observe(c));
+</script>
+
+</body>
+</html>
