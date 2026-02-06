@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HI_V2</title>
+    <style>
+        :root {
+            --cyan: #00f2ff;
+            --warning: #ff3c00;
+            --bg: #020202;
+            --border: rgba(0, 242, 255, 0.3);
+            --matrix: #003b3b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', monospace; font-weight: bold; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--cyan);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-shadow: 0 0 8px var(--cyan);
+        }
+
+        /* --- CRT OVERLAY --- */
+        .crt::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 200;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .main-frame {
+            width: 95%;
+            max-width: 420px;
+            height: 520px; /* Slightly taller for more tools */
+            border: 2px solid var(--cyan);
+            background: rgba(0, 10, 10, 0.9);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: inset 0 0 20px var(--border);
+        }
+
+        /* --- TOP HUD --- */
+        .hud-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        /* --- TOOL: NETWORK TRACE --- */
+        .network-trace {
+            font-size: 0.55rem;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #008888;
+        }
+
+        /* --- ANIMATED RADAR/MAP --- */
+        .visual-scanner {
+            height: 100px;
+            width: 100%;
+            border: 1px solid var(--border);
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .radar-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: var(--cyan);
+            box-shadow: 0 0 15px var(--cyan);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        /* --- TOOL: MEMORY GRAPH --- */
+        .memory-module {
+            display: flex;
+            gap: 2px;
+            height: 30px;
+            align-items: flex-end;
+            margin-bottom: 15px;
+            border: 1px solid var(--matrix);
+            padding: 3px;
+        }
+        .mem-bar { width: 10%; background: var(--cyan); height: 20%; animation: pulse 1.5s infinite alternate; }
+
+        @keyframes pulse { to { height: 100%; opacity: 0.5; } }
+
+        /* --- BRUTE FORCE BOX --- */
+        .password-decryptor {
+            background: rgba(0, 255, 242, 0.05);
+            padding: 10px;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 10px;
+            border: 1px dashed var(--cyan);
+        }
+
+        /* --- TOOL: IP SNIFFER --- */
+        .sniffer {
+            font-size: 0.6rem;
+            height: 40px;
+            background: #001111;
+            border-left: 3px solid var(--cyan);
+            padding: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        /* --- COMMAND FEED --- */
+        .command-feed {
+            flex: 1;
+            font-size: 0.7rem;
+            overflow: hidden;
+            color: #00ccff;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        /* --- ACTION BUTTONS --- */
+        .btn-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .hacker-btn {
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 12px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hacker-btn:active { background: var(--cyan); color: black; }
+        .hacker-btn.danger { border-color: var(--warning); color: var(--warning); }
+
+        /* --- GLITCH OVERLAY --- */
+        .glitch-flash {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            z-index: 500;
+            display: none;
+            mix-blend-mode: difference;
+        }
+    </style>
+</head>
+<body class="crt">
+
+    <div class="glitch-flash" id="glitch"></div>
+
+    <div class="main-frame">
+        <div class="hud-top">
+            <span>UPLINK: STABLE</span>
+            <span id="clock">00:00:00</span>
+        </div>
+
+        <div class="network-trace">
+            <span>NODE: [172.67.2.1]</span>
+            <span id="ping">LATENCY: 12ms</span>
+        </div>
+
+        <div class="visual-scanner">
+            <div class="radar-line"></div>
+            <span style="font-size: 0.5rem; color: #fff; z-index: 10;">VULN_SCANNER_V3.01</span>
+        </div>
+
+        <div class="memory-module" id="memGraph">
+            </div>
+
+        <div class="sniffer" id="snifferFeed">
+            [WAITING FOR PACKETS...]
+        </div>
+
+        <div class="password-decryptor" id="decryptor">
+            *-*-*-*-*-*
+        </div>
+
+        <div class="command-feed" id="feed">
+            > KERNEL_EXPLOIT LOADED...<br>
+            > INJECTING PAYLOAD...
+        </div>
+
+        <div class="btn-container">
+            <button class="hacker-btn" onclick="startBruteForce()">EXECUTE EXPLOIT</button>
+            <button class="hacker-btn danger" onclick="emergencyPurge()">WIPE SYSTEM</button>
+        </div>
+    </div>
+
+    <script>
+        const feed = document.getElementById('feed');
+        const decryptor = document.getElementById('decryptor');
+        const glitch = document.getElementById('glitch');
+        const sniffer = document.getElementById('snifferFeed');
+        const memGraph = document.getElementById('memGraph');
+
+        // Generate Memory Bars
+        for(let i=0; i<20; i++) {
+            let bar = document.createElement('div');
+            bar.className = 'mem-bar';
+            bar.style.animationDelay = (i * 0.1) + 's';
+            memGraph.appendChild(bar);
+        }
+
+        // --- TIME & LATENCY ---
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+            document.getElementById('ping').innerText = `LATENCY: ${Math.floor(Math.random() * 50) + 5}ms`;
+        }, 1000);
+
+        // --- IP SNIFFER ---
+        setInterval(() => {
+            const ips = ["192.168.0.1", "10.0.0.15", "172.16.254.1", "45.79.12.4"];
+            sniffer.innerText = `PACKET: [${ips[Math.floor(Math.random()*ips.length)]}] -> LEN: ${Math.floor(Math.random()*1024)} BYTES`;
+        }, 1500);
+
+        // --- FAKE HACKING FEED ---
+        const logs = [
+            "> SSH_BRUTE: TRYING 'root'...",
+            "> BYPASSING KERNEL_SANDBOX...",
+            "> BUFFER_OVERFLOW @ 0x7ffd...",
+            "> ENCRYPTING TRACE_ROUTE...",
+            "> TUNNEL_STABLISHED: PROXY_01",
+            "> SCRAPING_METADATA...",
+            "> TARGET_OS: LINUX_X64_GALAXY",
+            "> OVERRIDING BIOS_BOOT_VAL..."
+        ];
+
+        setInterval(() => {
+            const line = document.createElement('div');
+            line.innerHTML = logs[Math.floor(Math.random() * logs.length)];
+            feed.appendChild(line);
+            if(feed.childNodes.length > 6) feed.removeChild(feed.firstChild);
+        }, 1000);
+
+        // --- FAKE PASSWORD CRACKER ---
+        function startBruteForce() {
+            let cycles = 0;
+            const interval = setInterval(() => {
+                const chars = "01ABCDEF!@#$%";
+                let randomStr = "";
+                for(let i=0; i<12; i++) randomStr += chars[Math.floor(Math.random()*chars.length)];
+                decryptor.innerText = randomStr;
+                cycles++;
+                
+                if(cycles > 30) {
+                    clearInterval(interval);
+                    decryptor.innerText = "SYSTEM_BREACHED";
+                    decryptor.style.color = "white";
+                    decryptor.style.background = "#ff0000";
+                    triggerGlitch();
+                }
+            }, 60);
+        }
+
+        function triggerGlitch() {
+            glitch.style.backgroundColor = "red";
+            glitch.style.display = 'block';
+            setTimeout(() => glitch.style.display = 'none', 50);
+            if(navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+        }
+
+        function emergencyPurge() {
+            feed.innerHTML = "<span style='color:var(--warning)'>!! TOTAL PURGE: 100% !!</span>";
+            decryptor.innerText = "NO_DATA_FOUND";
+            decryptor.style.background = "black";
+            decryptor.style.color = "var(--warning)";
+            if(navigator.vibrate) navigator.vibrate(1000);
+        }
+    </script>
+</body>
+</html>
