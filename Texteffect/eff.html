@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Neuton:wght@400&display=swap');
+
+  body { 
+    background: #050505; 
+    color: white; 
+    font-family: "Neuton", serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  input[type="radio"] { display: none; }
+  .display-text {
+    font-family: "Oswald", sans-serif;
+    font-size: 6rem;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 3rem;
+    display: block;
+    line-height: 1.2;
+    position: relative;
+    padding: 15px 45px;
+    transition: all 0.5s ease;
+    z-index: 1;
+  }
+  .display-text::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border: 8px double #00f2fe;
+    z-index: -1;
+    transition: opacity 0.4s ease, filter 0.4s ease;
+    opacity: 1; 
+  }
+  .controls { display: flex; gap: 20px; }
+  .btn {
+    padding: 14px 28px;
+    border: 1px solid #333;
+    background: #111;
+    color: #666;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: 0.3s all;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+  #trigger-wave:checked ~ .display-text {
+    background: url('https://i.ibb.co/RDTnNrT/animated-text-fill.png') repeat;
+    background-size: 800% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: rgba(255, 255, 255, 0.2);
+    animation: wave-35deg 35s linear infinite;
+  }
+  #trigger-wave:checked ~ .display-text::before {
+    opacity: 0;
+    visibility: hidden;
+  }
+  #trigger-wave:checked ~ .controls label[for="trigger-wave"] {
+    background: #fff; color: #000; border-color: #fff;
+  }
+  #trigger-neon:checked ~ .display-text {
+    -webkit-text-fill-color: #fff;
+    background: none;
+    text-shadow: 0 0 10px #00f2fe, 0 0 30px #00f2fe;
+    animation: flicker 2s infinite alternate;
+  }
+  #trigger-neon:checked ~ .display-text::before {
+    opacity: 1;
+    filter: drop-shadow(0 0 15px #00f2fe);
+    animation: flicker 2s infinite alternate;
+  }
+  #trigger-neon:checked ~ .controls label[for="trigger-neon"] {
+    background: #00f2fe; color: #000; border-color: #00f2fe;
+  }
+  @keyframes wave-35deg {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 70%; }
+  }
+  @keyframes flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: 0.4; }
+  }
+</style>
+</head>
+<body>
+  <input type="radio" name="anim-style" id="trigger-wave" checked>
+  <input type="radio" name="anim-style" id="trigger-neon">
+  <span class="display-text">Cyber Type</span>
+  <div class="controls">
+    <label for="trigger-wave" class="btn">Wave Fill</label>
+    <label for="trigger-neon" class="btn">Neon Glitch</label>
+  </div>
+</body>
+</html>
