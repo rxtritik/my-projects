@@ -187,12 +187,8 @@ body{
         0 10px 22px rgba(0,0,0,.45),
         inset 0 1px 0 rgba(255,255,255,.08);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    display:flex;
-    align-items:center;
-    justify-content: center;
-    gap: 8px;
+    display:inline-block;
     -webkit-tap-highlight-color: transparent;
-    min-width: 160px;
 }
 .portfolio-btn:hover{
     transform: translateY(-2px);
@@ -209,25 +205,6 @@ body{
         0 6px 14px rgba(0,0,0,.4),
         inset 0 0 16px rgba(76,255,195,.25);
 }
-.spinner {
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(76, 255, 195, 0.2);
-    border-top-color: #4cffc3;
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-    display: none;
-}
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-.portfolio-btn.loading {
-    pointer-events: none;
-    opacity: 0.9;
-}
-.portfolio-btn.loading .spinner {
-    display: block;
-}
 </style>
 </head>
 <body>
@@ -238,10 +215,9 @@ body{
         <p>My GitHub UI & JavaScript Projects</p>
     </div>
     <div class="portfolio-btn-wrap">
-        <a class="portfolio-btn" id="portfolioBtn" href="https://rxtritik.github.io/my-projects/Portfolio.html" onclick="delayLink(event, this)">
-            <span class="btn-text">Open Portfolio</span>
-            <div class="spinner"></div>
-        </a>
+<a class="portfolio-btn" href="https://rxtritik.github.io/my-projects/Portfolio.html" onclick="delayLink(event, this)">
+    Open Portfolio
+</a>
     </div>
     <div class="grid">
         <div class="card">
@@ -297,19 +273,11 @@ body{
     function delayLink(event, element) {
         event.preventDefault(); 
         const url = element.href;
-        element.classList.add('loading');
-        const textSpan = element.querySelector('.btn-text');
-        if(textSpan) textSpan.innerText = "Opening...";
+        element.style.opacity = "0.5";
         setTimeout(() => {
             window.location.href = url;
         }, 900); 
     }
-    window.addEventListener('pageshow', (event) => {
-        const btn = document.getElementById('portfolioBtn');
-        const textSpan = btn.querySelector('.btn-text');
-        btn.classList.remove('loading');
-        if(textSpan) textSpan.innerText = "Open Portfolio";
-    });
     function closeDetails(details) {
         const ul = details.querySelector('ul');
         if (!ul) return;
