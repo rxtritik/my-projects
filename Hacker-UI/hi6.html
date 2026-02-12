@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultimate Cyber Panel</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family: 'Share Tech Mono', monospace;
+    user-select: none;
+}
+
+body{
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+    background: #000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: #0f0;
+}
+
+/* --- BACKGROUND EFFECTS --- */
+
+/* 1. Matrix Canvas Layer */
+canvas#matrix {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.8;
+}
+
+/* 2. CRT Scanline Overlay */
+.crt-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+    ), linear-gradient(
+        90deg, 
+        rgba(255, 0, 0, 0.06), 
+        rgba(0, 255, 0, 0.02), 
+        rgba(0, 0, 255, 0.06)
+    );
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+}
+
+/* 3. Vignette (Dark Corners) */
+.vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: radial-gradient(circle, transparent 50%, #000 100%);
+    pointer-events: none;
+}
+
+/* --- MAIN PANEL --- */
+.panel {
+    position: relative;
+    z-index: 10;
+    width: min(90vw, 380px);
+    background: rgba(0, 20, 0, 0.85); /* Dark Green tint */
+    border: 1px solid #0f0;
+    box-shadow: 
+        0 0 20px rgba(0, 255, 0, 0.2),
+        inset 0 0 20px rgba(0, 255, 0, 0.1);
+    padding: 20px;
+    border-radius: 4px; /* Sharper corners for retro look */
+    backdrop-filter: blur(4px);
+}
+
+/* Corner decorations */
+.panel::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 10px; height: 10px;
+    border-top: 2px solid #0f0;
+    border-left: 2px solid #0f0;
+}
+.panel::after {
+    content: "";
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 10px; height: 10px;
+    border-bottom: 2px solid #0f0;
+    border-right: 2px solid #0f0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #0f0;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: #0f0;
+    text-shadow: 0 0 5px #0f0;
+}
+
+.status-badge {
+    background: #0f0;
+    color: #000;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* --- UI COMPONENTS --- */
+.section {
+    margin-bottom: 20px;
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #0f0;
+}
+
+/* Hacker Slider */
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 10px;
+    background: #003300;
+    border: 1px solid #0f0;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 10px;
+    background: #0f0;
+    margin-top: -6px;
+    box-shadow: 0 0 10px #0f0;
+    cursor: pointer;
+}
+
+/* Advanced Button */
+.adv-btn {
+    width: 100%;
+    background: #000;
+    border: 1px solid #0f0;
+    color: #0f0;
+    padding: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.adv-btn:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 15px #0f0;
+}
+
+/* --- POPUP --- */
+.popup {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 10, 0, 0.95);
+    z-index: 50;
+    display: none;
+    flex-direction: column;
+    padding: 20px;
+}
+.popup.active { display: flex; }
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #0f0;
+    padding-bottom: 10px;
+}
+
+.close-x {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.terminal {
+    flex: 1;
+    background: #000;
+    border: 1px solid #005500;
+    padding: 10px;
+    font-size: 12px;
+    color: #0f0;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    font-family: monospace;
+}
+.terminal p { margin: 2px 0; }
+
+.btn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.hack-action {
+    background: #001100;
+    border: 1px solid #005500;
+    color: #00aa00;
+    padding: 15px 5px;
+    cursor: pointer;
+    font-size: 12px;
+    text-align: center;
+    transition: 0.2s;
+}
+.hack-action:hover {
+    border-color: #0f0;
+    color: #0f0;
+    text-shadow: 0 0 5px #0f0;
+}
+.hack-action:active {
+    background: #0f0;
+    color: #000;
+}
+
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+<div class="crt-overlay"></div>
+<div class="vignette"></div>
+
+<div class="panel">
+    <div class="header">
+        <div class="title">MAINFRAME.EXE</div>
+        <div class="status-badge">SECURE</div>
+    </div>
+
+    <div class="section">
+        <div class="label-row">
+            <span>CPU THREADS</span>
+            <span id="coreText">4 CORES</span>
+        </div>
+        <input type="range" id="coreSlider" min="1" max="100" value="5">
+    </div>
+
+    <div class="section">
+        <div class="label-row">
+            <span>UPLINK STABILITY</span>
+            <span>98%</span>
+        </div>
+        <div style="width:100%; height:8px; background:#003300; border:1px solid #0f0;">
+            <div style="width:98%; height:100%; background:#0f0; box-shadow:0 0 10px #0f0;"></div>
+        </div>
+    </div>
+
+    <button class="adv-btn" id="openAdv">
+        Initialize Advanced
+    </button>
+
+    <div class="popup" id="advPopup">
+        <div class="popup-header">
+            <span>ROOT_ACCESS_TOOLS</span>
+            <span class="close-x" id="closeAdv">[X]</span>
+        </div>
+
+        <div class="terminal" id="consoleOutput">
+            <p>> SYSTEM READY...</p>
+            <p>> WAITING FOR INPUT...</p>
+        </div>
+
+        <div class="btn-grid">
+            <div class="hack-action" onclick="hack('trace')">TRACE</div>
+            <div class="hack-action" onclick="hack('decrypt')">DECRYPT</div>
+            <div class="hack-action" onclick="hack('override')">OVERRIDE</div>
+        </div>
+    </div>
+</div>
+
+<script>
+/* --- MATRIX RAIN EFFECT --- */
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレゲゼデベペオォコソトノホモヨョロヲゴゾドボポ1234567890';
+const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const nums = '0123456789';
+const alphabet = katakana + latin + nums;
+
+const fontSize = 14;
+const columns = canvas.width/fontSize;
+const drops = [];
+
+for(let x=0; x < columns; x++) drops[x] = 1;
+
+function drawMatrix() {
+    // Translucent black background for trail effect
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#0F0'; // Hacker Green
+    ctx.font = fontSize + 'px monospace';
+
+    for(let i=0; i < drops.length; i++) {
+        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+
+        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
+            drops[i] = 0;
+        
+        drops[i]++;
+    }
+}
+setInterval(drawMatrix, 35);
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+/* --- UI LOGIC --- */
+// Core Slider
+const slider = document.getElementById('coreSlider');
+const coreText = document.getElementById('coreText');
+slider.addEventListener('input', (e) => {
+    const val = Math.ceil((e.target.value / 100) * 128);
+    coreText.innerText = val + " CORES";
+});
+
+// Popup
+const openAdv = document.getElementById('openAdv');
+const closeAdv = document.getElementById('closeAdv');
+const popup = document.getElementById('advPopup');
+const terminal = document.getElementById('consoleOutput');
+let hackTimer;
+
+openAdv.addEventListener('click', () => popup.classList.add('active'));
+closeAdv.addEventListener('click', () => {
+    popup.classList.remove('active');
+    clearInterval(hackTimer);
+});
+
+// Hacking Logic
+const logs = {
+    trace: [
+        "Resolving host...",
+        "Pinging proxy chain 10.0.4.2...",
+        "Bypassing NAT firewalls...",
+        "Geo-locating signal...",
+        "Target Found: 38.291, -77.036",
+        "Locking GPS coordinates..."
+    ],
+    decrypt: [
+        "Analyzing hash integrity...",
+        "Brute forcing AES-256...",
+        "Injecting rainbow table...",
+        "Salt match found...",
+        "Key: 8x9s_f8a_22",
+        "ACCESS GRANTED"
+    ],
+    override: [
+        "Escalating privileges...",
+        "Root kit deployed...",
+        "Overwriting admin kernel...",
+        "Disabling security protocols...",
+        "System Control: TRANSFERRING...",
+        "COMPLETE."
+    ]
+};
+
+function hack(type) {
+    clearInterval(hackTimer);
+    terminal.innerHTML = "";
+    
+    // Header
+    const h = document.createElement('p');
+    h.style.color = "#fff";
+    h.innerText = `>> EXECUTE: ${type.toUpperCase()}.EXE`;
+    terminal.appendChild(h);
+
+    const lines = logs[type];
+    let i = 0;
+
+    hackTimer = setInterval(() => {
+        if(i >= lines.length) {
+            clearInterval(hackTimer);
+            return;
+        }
+        const p = document.createElement('p');
+        p.innerText = `> ${lines[i]}`;
+        terminal.appendChild(p);
+        terminal.scrollTop = terminal.scrollHeight;
+        i++;
+    }, 400);
+}
+</script>
+</body>
+</html>
