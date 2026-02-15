@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Aura Kinetic Watch</title>
+<style>
+:root{
+    --bg-color:#050505;
+    --accent-hour:#ff0055;
+    --accent-min:#00f2ff;
+    --accent-sec:#7000ff;
+    --glass:rgba(255,255,255,0.03);
+}
+body.theme-neon{
+    --bg-color:#050505;
+    --accent-hour:#ff0055;
+    --accent-min:#00f2ff;
+    --accent-sec:#7000ff;
+}
+body.theme-ice{
+    --bg-color:#060b14;
+    --accent-hour:#7dd3fc;
+    --accent-min:#38bdf8;
+    --accent-sec:#0ea5e9;
+}
+body.theme-sunset{
+    --bg-color:#120804;
+    --accent-hour:#ff6b00;
+    --accent-min:#ff3d81;
+    --accent-sec:#ffd166;
+}
+body.theme-emerald{
+    --bg-color:#04120c;
+    --accent-hour:#10b981;
+    --accent-min:#34d399;
+    --accent-sec:#6ee7b7;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    background:var(--bg-color);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    overflow:hidden;
+}
+.watch-container{
+    position:relative;
+    width:min(85vw,85vh,420px);
+    height:min(85vw,85vh,420px);
+    display:flex;
+    justify-content:center;
+    align-items:center; 
+}
+.aura{
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    filter:blur(60px);
+    opacity:0.3;
+    transition:background 1s ease;
+}
+svg{
+    width:100%;
+    height:100%;
+    transform:rotate(-90deg);
+}
+circle{
+    fill:none;
+    stroke-width:8;
+    stroke-linecap:round;
+    transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1);
+}
+.track{stroke:rgba(255,255,255,.05);}
+#ring-hour{stroke:var(--accent-hour);stroke-width:12;filter:drop-shadow(0 0 8px var(--accent-hour));}
+#ring-min{stroke:var(--accent-min);stroke-width:8;filter:drop-shadow(0 0 8px var(--accent-min));}
+#ring-sec{stroke:var(--accent-sec);stroke-width:4;filter:drop-shadow(0 0 5px var(--accent-sec));}
+.center-display{
+    position:absolute;
+    text-align:center;
+    color:white;
+    z-index:10;
+}
+.time-main{
+    font-size:clamp(2.6rem,8vw,4rem);
+    font-weight:200;
+    letter-spacing:-2px;
+    line-height:1;
+}
+.date-sub{
+    font-size:.9rem;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    color:#888;
+    margin-top:10px;
+}
+.orbit-dot{
+    position:absolute;
+    width:12px;
+    height:12px;
+    background:white;
+    border-radius:50%;
+    box-shadow:0 0 20px #fff;
+    offset-path:circle(48% at 50% 50%);
+    animation:orbit 60s linear infinite;
+}
+@keyframes orbit{
+    from{offset-distance:0%;}
+    to{offset-distance:100%;}
+}
+.theme-btn{
+    position:fixed;
+    bottom:120px;
+    z-index:100;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.15);
+    color:#fff;
+    backdrop-filter:blur(10px);
+    padding:10px 14px;
+    border-radius:14px;
+    font-size:13px;
+    letter-spacing:.5px;
+    cursor:pointer;
+}
+.theme-btn:active{
+    transform:scale(.95);
+}
+</style>
+</head>
+<body class="theme-neon">
+<div class="watch-container">
+    <div class="aura" id="aura-bg"></div>
+    <svg viewBox="0 0 200 200">
+        <circle class="track" cx="100" cy="100" r="90"/>
+        <circle id="ring-hour" cx="100" cy="100" r="90"/>
+        <circle class="track" cx="100" cy="100" r="75"/>
+        <circle id="ring-min" cx="100" cy="100" r="75"/>
+        <circle class="track" cx="100" cy="100" r="60"/>
+        <circle id="ring-sec" cx="100" cy="100" r="60"/>
+    </svg>
+    <div class="center-display">
+        <div class="time-main" id="digital-time">00:00</div>
+        <div class="date-sub" id="date-text">JAN 01</div>
+    </div>
+    <div class="orbit-dot"></div>
+</div>
+<button class="theme-btn" id="themeBtn">Theme</button>
+<script>
+const ringHour=document.getElementById('ring-hour');
+const ringMin=document.getElementById('ring-min');
+const ringSec=document.getElementById('ring-sec');
+const digitalTime=document.getElementById('digital-time');
+const dateText=document.getElementById('date-text');
+const aura=document.getElementById('aura-bg');
+function setProgress(circle,percent,radius){
+    const circumference=2*Math.PI*radius;
+    circle.style.strokeDasharray=`${circumference} ${circumference}`;
+    const offset=circumference-(percent/100*circumference);
+    circle.style.strokeDashoffset=offset;
+}
+function updateClock(){
+    const now=new Date();
+    const hours=now.getHours();
+    const minutes=now.getMinutes();
+    const seconds=now.getSeconds();
+    const ms=now.getMilliseconds();
+    const secPercent=((seconds+ms/1000)/60)*100;
+    const minPercent=((minutes+seconds/60)/60)*100;
+    const hourPercent=(((hours%12)+minutes/60)/12)*100;
+    setProgress(ringSec,secPercent,60);
+    setProgress(ringMin,minPercent,75);
+    setProgress(ringHour,hourPercent,90);
+    const h=String(hours).padStart(2,'0');
+    const m=String(minutes).padStart(2,'0');
+    digitalTime.textContent=`${h}:${m}`;
+    const options={month:'short',day:'2-digit'};
+    dateText.textContent=now.toLocaleDateString('en-US',options);
+    aura.style.background=
+        `conic-gradient(from ${secPercent*3.6}deg,
+        var(--accent-sec),
+        var(--accent-min),
+        var(--accent-hour))`;
+    requestAnimationFrame(updateClock);
+}
+updateClock();
+const themes=["theme-neon","theme-ice","theme-sunset","theme-emerald"];
+let tIndex=0;
+const btn=document.getElementById("themeBtn");
+btn.addEventListener("click",()=>{
+    document.body.classList.remove(themes[tIndex]);
+    tIndex=(tIndex+1)%themes.length;
+    document.body.classList.add(themes[tIndex]);
+});
+</script>
+</body>
+</html>
