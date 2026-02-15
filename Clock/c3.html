@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tactical Watch Face v2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-cyan: #00ffcc;
+            --neon-dim: #008f72;
+            --bg-black: #0a0a0a;
+            --bg-dark-gray: #151515;
+            --border-color: #2a2a2a;
+        }
+        body {
+            background-color: #111;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; 
+            font-family: 'Oswald', sans-serif;
+        }
+        #watch-scale-wrapper {
+            width: 500px;
+            height: 500px;
+            position: relative;
+        }
+        .watch-case {
+            width: 500px;
+            height: 500px;
+            background: #000;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 
+                0 0 0 10px #222, 
+                0 0 60px rgba(0,0,0,0.9), 
+                inset 0 0 30px rgba(0, 255, 204, 0.1); 
+            overflow: hidden;
+            border: 4px solid #333;
+        }
+        .outer-ring {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, #1b1b1b 60%, #050505 100%);
+        }
+        .tick {
+            position: absolute;
+            width: 2px;
+            height: 12px;
+            background: #444;
+            left: 50%; 
+            top: 0;    
+            transform-origin: 50% 250px; 
+            margin-left: -1px; 
+        }
+        .tick.major {
+            width: 4px;
+            height: 18px;
+            background: #fff;
+            margin-left: -2px;
+        }
+        .marker-claw {
+            position: absolute;
+            width: 30px;
+            height: 45px;
+            background: linear-gradient(180deg, var(--neon-cyan), var(--neon-dim));
+            top: 0;
+            left: 50%;
+            margin-left: -15px; 
+            transform-origin: 50% 250px; 
+            clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+            box-shadow: 0 0 8px var(--neon-cyan);
+            z-index: 2;
+        }
+        .panel-top-bg {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 260px;
+            height: 140px;
+            background: #111;
+            clip-path: polygon(15% 0, 85% 0, 100% 100%, 0 100%); 
+            border-bottom: 2px solid var(--neon-dim);
+            z-index: 3;
+        }
+        .digital-wrapper {
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 4;
+            width: 200px;
+        }
+        .digital-time {
+            color: #fff;
+            font-size: 3.8rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: 1px;
+        }
+        .am-pm {
+            color: #aaa;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            display: block;
+            margin-top: 2px;
+        }
+        .widget-left {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #222 30%, #000 100%);
+            border: 4px solid #333;
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(0,0,0,0.8);
+        }
+        .widget-left::before {
+            content: '';
+            position: absolute;
+            width: 85%;
+            height: 85%;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            border-left-color: var(--neon-cyan);
+            border-bottom-color: var(--neon-cyan);
+            transform: rotate(-45deg);
+            opacity: 0.8;
+        }
+        .hr-value { font-size: 2.5rem; color: #fff; font-weight: 700; line-height: 1; }
+        .hr-icon { color: #888; font-size: 1.2rem; margin-bottom: 2px; }
+        .lbl-curved {
+            position: absolute;
+            font-size: 0.6rem;
+            color: #555;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .lbl-curved.low { top: 15px; }
+        .lbl-curved.high { bottom: 15px; }
+        .widget-right {
+            position: absolute;
+            right: 45px; 
+            top: 50%;
+            transform: translateY(-50%);
+            width: 150px;
+            z-index: 4;
+            text-align: right;
+        }
+        .step-count { font-size: 2rem; color: #fff; font-weight: 500; margin-bottom: 5px; }
+        .date-badge {
+            background: linear-gradient(90deg, transparent 0%, var(--neon-dim) 100%);
+            color: #fff;
+            padding: 4px 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: inline-block;
+            border-right: 4px solid var(--neon-cyan);
+        }
+        .day-name { font-size: 1.2rem; color: #ccc; margin-top: 4px; font-weight: 700; }
+        .widget-bottom {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #111;
+            border: 3px solid #333;
+            z-index: 4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .power-arc {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 6px solid #2a2a2a;
+            border-top-color: var(--neon-cyan);
+            transform: rotate(-45deg);
+        }
+        .power-val { font-size: 1.5rem; color: #fff; font-family: 'Roboto Condensed'; z-index: 2; }
+        .pwr-lbl { font-size: 0.7rem; color: #999; margin-top: 2px; }
+        .center-pivot {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 18px; height: 18px;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            border: 3px solid #000;
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+        .hand {
+            position: absolute;
+            left: 50%;
+            bottom: 50%;
+            transform-origin: bottom center;
+            border-radius: 4px;
+            z-index: 10;
+        }
+        .hand-hour {
+            width: 18px;
+            height: 110px;
+            background: rgba(0,0,0,0.6); 
+            border: 2px solid var(--neon-cyan);
+            margin-left: -9px; 
+            clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+        }
+        .hand-minute {
+            width: 14px;
+            height: 160px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid var(--neon-cyan);
+            margin-left: -7px;
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
+            z-index: 11;
+        }
+        .hand-second {
+            width: 2px;
+            height: 180px;
+            background: var(--neon-cyan);
+            margin-left: -1px;
+            z-index: 12;
+            box-shadow: 0 0 6px var(--neon-cyan);
+        }
+        .hand-second::after {
+            content: '';
+            position: absolute;
+            top: 100%; left: -1px;
+            width: 4px; height: 30px;
+            background: var(--neon-cyan);
+        }
+    </style>
+</head>
+<body>
+    <div id="watch-scale-wrapper">
+        <div class="watch-case">
+            <div class="outer-ring" id="tickContainer"></div>
+            <div id="clawContainer"></div>
+            <div class="panel-top-bg"></div>
+            <div class="digital-wrapper">
+                <div class="digital-time" id="digitalTime">10:08</div>
+                <span class="am-pm" id="amPm">AM</span>
+            </div>
+            <div class="widget-left">
+                <div class="lbl-curved low">LOW</div>
+                <div class="hr-icon">♥</div>
+                <div class="hr-value">89</div>
+                <div class="lbl-curved high">HIGH</div>
+            </div>
+            <div class="widget-right">
+                <div class="step-count">7876 <span style="font-size:0.8rem; color:#888;">STEPS</span></div>
+                <div class="date-badge" id="dateBox">JUN 11</div>
+                <div class="day-name" id="dayName">WED</div>
+            </div>
+            <div class="widget-bottom">
+                <div class="power-arc"></div>
+                <div style="font-size:1rem; color:#888;">⚡</div>
+                <div class="power-val">100</div>
+                <div class="pwr-lbl">PWR</div>
+                <div style="position:absolute; bottom:25px; left:25px; font-size:0.6rem; color:#666; font-weight:bold">E</div>
+                <div style="position:absolute; bottom:25px; right:25px; font-size:0.6rem; color:#666; font-weight:bold">F</div>
+            </div>
+            <div class="center-pivot"></div>
+            <div class="hand hand-hour" id="handHour"></div>
+            <div class="hand hand-minute" id="handMinute"></div>
+            <div class="hand hand-second" id="handSecond"></div>
+        </div>
+    </div>
+  <script>
+    function fitWatch() {
+        const wrapper = document.getElementById('watch-scale-wrapper');
+        const padding = 20;
+        const availableSize = Math.min(window.innerWidth, window.innerHeight) - padding;
+        const scale = (availableSize / 500) * 0.92;
+        wrapper.style.zoom = scale;
+    }
+    window.addEventListener('resize', fitWatch);
+    fitWatch();
+    const tickContainer = document.getElementById('tickContainer');
+    const clawContainer = document.getElementById('clawContainer');
+    for (let i = 0; i < 60; i++) {
+        const tick = document.createElement('div');
+        tick.classList.add('tick');
+        if (i % 5 === 0) tick.classList.add('major');
+        tick.style.transform = `rotate(${i * 6}deg)`;
+        tickContainer.appendChild(tick);
+    }
+    for (let i = 0; i < 12; i++) {
+        const deg = i * 30;
+        if (deg === 0 || deg === 90 || deg === 180 || deg === 270) continue;
+        const claw = document.createElement('div');
+        claw.className = 'marker-claw';
+        claw.style.transform = `rotate(${deg}deg)`;
+        clawContainer.appendChild(claw);
+    }
+    function updateClock() {
+        const now = new Date();
+        const sec = now.getSeconds();
+        const min = now.getMinutes();
+        const hr  = now.getHours();
+        const mDeg = min * 6 + sec * 0.1;
+        const hDeg = (hr % 12) * 30 + min * 0.5;
+        document.getElementById('handMinute').style.transform = `rotate(${mDeg}deg)`;
+        document.getElementById('handHour').style.transform   = `rotate(${hDeg}deg)`;
+        let hDisp = hr % 12 || 12;
+        let mDisp = min < 10 ? '0' + min : min;
+        document.getElementById('digitalTime').textContent = `${hDisp}:${mDisp}`;
+        document.getElementById('amPm').textContent = hr >= 12 ? 'PM' : 'AM';
+        const months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+        const days   = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+        document.getElementById('dateBox').textContent =
+            `${months[now.getMonth()]} ${now.getDate()}`;
+        document.getElementById('dayName').textContent =
+            days[now.getDay()];
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+    function smoothSecondHand() {
+        const now = new Date();
+        const sec = now.getSeconds();
+        const ms  = now.getMilliseconds();
+        const sDeg = (sec + ms / 1000) * 6;
+        document.getElementById('handSecond').style.transform =
+            `rotate(${sDeg}deg)`;
+        requestAnimationFrame(smoothSecondHand);
+    }
+    smoothSecondHand();
+</script>
+</body>
+</html>
