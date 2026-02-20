@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Player</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+      :root {
+    --bg-color: #e0e5ec;
+    --text-main: #4a5568;
+    --text-sub: #718096;
+    --shadow-light: #ffffff;
+    --shadow-dark: #a3b1c6;
+    --accent: #6c5ce7;
+}
+*{
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-main);
+}
+
+.player-container {
+    width: 320px;
+    padding: 25px;
+    border-radius: 40px;
+    background: var(--bg-color);
+    box-shadow: 20px 20px 60px var(--shadow-dark),
+                -20px -20px 60px var(--shadow-light);
+    text-align: center;
+}
+
+/* Header Navigation */
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Album Image with Soft Border */
+.album-art {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 30px;
+    border-radius: 50%;
+    border: 8px solid var(--bg-color);
+    box-shadow: 10px 10px 20px var(--shadow-dark),
+                -10px -10px 20px var(--shadow-light);
+    overflow: hidden;
+}
+
+.album-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Typography */
+.song-details h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.song-details p {
+    color: var(--text-sub);
+    margin: 5px 0 25px;
+}
+
+/* Progress Slider */
+.progress-area {
+    margin-bottom: 30px;
+}
+
+.time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    height: 8px;
+    width: 100%;
+    background: var(--bg-color);
+    border-radius: 10px;
+    box-shadow: inset 4px 4px 8px var(--shadow-dark),
+                inset -4px -4px 8px var(--shadow-light);
+}
+
+.fill {
+    width: 35%;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 10px;
+}
+
+/* Buttons Styling */
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+button {
+    border: none;
+    outline: none;
+    background: var(--bg-color);
+    color: var(--text-main);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 8px var(--shadow-dark),
+                -4px -4px 8px var(--shadow-light);
+}
+
+.btn-medium {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    box-shadow: 6px 6px 12px var(--shadow-dark),
+                -6px -6px 12px var(--shadow-light);
+}
+
+.btn-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    color: var(--accent);
+    box-shadow: 8px 8px 16px var(--shadow-dark),
+                -8px -8px 16px var(--shadow-light);
+}
+
+/* Interactive States */
+button:active {
+    box-shadow: inset 4px 4px 8px var(--shadow-dark),
+                inset -4px -4px 8px var(--shadow-light);
+    transform: scale(0.98);
+}
+/* Add these variables to your existing :root or CSS file */
+:root {
+    /* Light Mode Palette */
+    --bg-color: #e0e5ec;
+    --text-main: #4a5568;
+    --text-sub: #718096;
+    --shadow-light: #ffffff;
+    --shadow-dark: #a3b1c6;
+    --accent: #6c5ce7;
+}
+
+/* Dark Mode Palette - Deep Navy/Slate */
+.dark-mode {
+    --bg-color: #1a1c20;
+    --text-main: #e2e8f0;
+    --text-sub: #94a3b8;
+    --shadow-light: #25282e; /* Slightly lighter than bg */
+    --shadow-dark: #0f1013;  /* Slightly darker than bg */
+    --accent: #a29bfe;       /* Brighter accent for contrast */
+}
+
+/* Smooth transition for theme switching */
+body, .player-container, button, .album-art, .progress-bar {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Position for the Toggle Button */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.visualizer-container {
+    width: 100%;
+    height: 60px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#visualizer {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+label[for="file-upload"] {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Match the btn-small styling exactly */
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 8px var(--shadow-dark),
+                -4px -4px 8px var(--shadow-light);
+}
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-color);
+    border-radius: 10px;
+    box-shadow: inset 4px 4px 8px var(--shadow-dark),
+                inset -4px -4px 8px var(--shadow-light);
+    cursor: pointer;
+    position: relative;
+    /* IMPORTANT: Remove overflow: hidden so the circle can sit on the edge */
+    overflow: visible; 
+}
+
+.fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 10px;
+    position: relative;
+    width: 0%; /* Starts at 0 */
+    /* REMOVE any 'transition' property here to stop the sticking/lag */
+}
+
+/* The Handle (The Circle) */
+.fill::after {
+    content: '';
+    position: absolute;
+    right: -7px; /* Half of the width to center it perfectly on the end line */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    background: var(--accent);
+    border: 2px solid var(--bg-color);
+    border-radius: 50%;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+.playlist-container {
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    text-align: left;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: inset 4px 4px 8px var(--shadow-dark),
+                inset -4px -4px 8px var(--shadow-light);
+}
+
+/* SIDE MENU STYLES */
+.side-menu {
+    position: fixed;
+    top: 0;
+    right: -350px; /* Hidden by default */
+    width: 280px;
+    height: 100%;
+    background: var(--bg-color);
+    box-shadow: -10px 0 30px var(--shadow-dark);
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.side-menu.active {
+    right: 0;
+}
+
+.menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+#playlist-ul {
+    list-style: none;
+    padding: 0;
+    overflow-y: auto;
+}
+
+.playlist-item {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    background: var(--bg-color);
+    box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.playlist-item.active {
+    color: var(--accent);
+    box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+}
+/* MARQUEE ANIMATION STYLES */
+.title-wrapper {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0 auto;
+    display: flex; /* Helps with alignment */
+}
+
+#song-title {
+    display: inline-block;
+    /* Changed: '1' for one time, 'forwards' to stop at the end */
+    animation: marquee 8s linear 1 forwards; 
+    font-size: 1.3rem;
+    margin: 0;
+    padding-left: 0; 
+}
+
+@keyframes marquee {
+    0% { transform: translateX(100%); }   /* Start completely on the right */
+    100% { transform: translateX(0%); }    /* Stop at the natural left position */
+}
+/* CENTERED TITLE ANIMATION */
+.title-wrapper {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center; /* This keeps the text in center after animation */
+}
+
+#song-title {
+    display: inline-block;
+    /* 1 = Play once, forwards = stay at the end position */
+    animation: marquee 5s ease-out 1 forwards; 
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(100%); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translateX(0%); }
+}
+
+.song-details p {
+    color: var(--text-sub);
+    margin: 5px 0 25px;
+}
+.progress-area {
+    position: relative;
+    z-index: 10; /* Brings it above the visualizer background */
+    margin-bottom: 25px;
+}
+
+.progress-bar {
+    cursor: pointer;
+    touch-action: none; /* Helps with mobile seeking */
+}
+
+
+    </style>
+</head>
+<body class="light-mode">
+
+    <div id="side-menu" class="side-menu">
+        <div class="menu-header">
+            <span>PLAYLIST</span>
+            <button id="close-menu" class="btn-small">✕</button>
+        </div>
+        <ul id="playlist-ul">
+            </ul>
+    </div>
+
+    <div class="player-container">
+        <div class="theme-toggle">
+            <button class="btn-small" id="mode-switch">
+                <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="nav-bar">
+            <label for="file-upload" class="btn-small">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </label>
+            <input type="file" id="file-upload" accept="audio/*" style="display: none;" multiple>
+            
+            <span>OFFLINE PLAYER</span>
+            
+            <button class="btn-small" id="menu-open-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="album-art">
+            <div id="art-placeholder" style="display: flex; align-items: center; justify-content: center; height: 100%; background: #ced4da; color: #adb5bd;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+            </div>
+            <img id="main-art" src="" style="display: none;">
+        </div>
+
+        <div class="song-details">
+            <div class="title-wrapper">
+                <h2 id="song-title">No Song Loaded</h2>
+            </div>
+            <p id="artist-name">Click + to add music</p>
+        </div>
+
+        <div class="visualizer-container">
+            <canvas id="visualizer"></canvas>
+        </div>
+
+        <div class="progress-area">
+            <div class="time">
+                <span id="current-time">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+            <div class="progress-bar" id="progress-bar">
+                <div class="fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-medium" id="prev-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="19 20 9 12 19 4 19 20"></polygon>
+                    <line x1="5" y1="19" x2="5" y2="5"></line>
+                </svg>
+            </button>
+            <button class="btn-large play-pause" id="play-btn">
+                <svg id="play-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+            </button>
+            <button class="btn-medium" id="next-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                    <line x1="19" y1="5" x2="19" y2="19"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+    const audio = new Audio();
+    const playBtn = document.getElementById('play-btn');
+    const playIcon = document.getElementById('play-icon');
+    const fileUpload = document.getElementById('file-upload');
+    const progressFill = document.getElementById('progress-fill');
+    const progressBar = document.getElementById('progress-bar');
+    const sideMenu = document.getElementById('side-menu');
+    const openMenuBtn = document.getElementById('menu-open-btn');
+    const closeMenuBtn = document.getElementById('close-menu');
+    const playlistUl = document.getElementById('playlist-ul');
+    const songTitle = document.getElementById('song-title');
+    const canvas = document.getElementById('visualizer');
+    const ctx = canvas.getContext('2d');
+
+    let playlist = [];
+    let currentIndex = -1;
+    let isPlaying = false;
+    let isDragging = false;
+    let audioCtx, analyzer, dataArray;
+    let vizMode = 0; // 0: Mountain, 1: Dotted Wave, 2: Mirror Ripple
+
+    // Base color
+    const colorRed = "#FF0000"; 
+
+    // --- SIDE MENU ---
+    openMenuBtn.onclick = () => sideMenu.classList.add('active');
+    closeMenuBtn.onclick = () => sideMenu.classList.remove('active');
+
+    // --- PLAYLIST & LOADING ---
+    fileUpload.onchange = (e) => {
+        const files = Array.from(e.target.files);
+        files.forEach(file => {
+            playlist.push({ name: file.name.split('.')[0], url: URL.createObjectURL(file) });
+        });
+        renderPlaylist();
+        if (currentIndex === -1 && playlist.length > 0) loadSong(0);
+    };
+
+    function renderPlaylist() {
+        playlistUl.innerHTML = '';
+        playlist.forEach((song, index) => {
+            const li = document.createElement('li');
+            li.className = `playlist-item ${index === currentIndex ? 'active' : ''}`;
+            li.innerText = song.name;
+            li.onclick = () => { loadSong(index); sideMenu.classList.remove('active'); };
+            playlistUl.appendChild(li);
+        });
+    }
+
+    function loadSong(index) {
+        if (!playlist[index]) return;
+        currentIndex = index;
+        audio.src = playlist[index].url;
+        songTitle.innerText = playlist[index].name;
+        songTitle.style.animation = 'none';
+        void songTitle.offsetWidth; 
+        songTitle.style.animation = 'marquee 5s ease-out 1 forwards';
+        renderPlaylist();
+        isPlaying = false;
+        handlePlay();
+    }
+
+    // --- CONTROLS ---
+    function handlePlay() {
+        if (!audio.src) return;
+        if (isPlaying) {
+            audio.pause();
+            playIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+        } else {
+            if (!audioCtx) initViz();
+            audio.play();
+            playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+        }
+        isPlaying = !isPlaying;
+    }
+
+    playBtn.onclick = handlePlay;
+    document.getElementById('prev-btn').onclick = () => { if(currentIndex > 0) loadSong(currentIndex - 1); };
+    document.getElementById('next-btn').onclick = () => { if(currentIndex < playlist.length - 1) loadSong(currentIndex + 1); };
+    audio.onended = () => { if(currentIndex < playlist.length - 1) loadSong(currentIndex + 1); };
+
+    // --- SEEKBAR ---
+    function scrub(e) {
+        if (!audio.src || !audio.duration) return;
+        const rect = progressBar.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const x = clientX - rect.left;
+        let per = Math.max(0, Math.min(100, (x / rect.width) * 100));
+        progressFill.style.width = per + '%';
+        audio.currentTime = (per / 100) * audio.duration;
+    }
+
+    progressBar.addEventListener('mousedown', (e) => { isDragging = true; scrub(e); });
+    window.addEventListener('mousemove', (e) => { if (isDragging) scrub(e); });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    progressBar.addEventListener('touchstart', (e) => { isDragging = true; scrub(e); }, {passive: false});
+    window.addEventListener('touchmove', (e) => { if (isDragging) scrub(e); }, {passive: false});
+    window.addEventListener('touchend', () => { isDragging = false; });
+
+    audio.ontimeupdate = () => {
+        if (!isDragging && audio.duration) {
+            const per = (audio.currentTime / audio.duration) * 100;
+            progressFill.style.width = per + '%';
+            document.getElementById('current-time').innerText = fmt(audio.currentTime);
+            document.getElementById('duration').innerText = fmt(audio.duration);
+        }
+    };
+    const fmt = (s) => `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`;
+
+    // --- VISUALIZATION ---
+    function initViz() {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyzer = audioCtx.createAnalyser();
+        const source = audioCtx.createMediaElementSource(audio);
+        source.connect(analyzer);
+        analyzer.connect(audioCtx.destination);
+        analyzer.fftSize = 256; 
+        dataArray = new Uint8Array(analyzer.frequencyBinCount);
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        canvas.addEventListener('dblclick', () => { vizMode = (vizMode + 1) % 3; });
+        draw();
+    }
+
+    function draw() {
+        requestAnimationFrame(draw);
+        analyzer.getByteFrequencyData(dataArray);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        const colorAccent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+        
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        if (vizMode === 0) {
+            // MODE 0: MOUNTAIN BARS (Accent is Dominant)
+            const barWidth = 3, gap = 2, centerX = canvas.width / 2;
+            for (let i = 0; i < dataArray.length / 2; i++) {
+                const h = (dataArray[i] / 255) * canvas.height;
+                // Accent at bottom (dominant), Red at top (accentuated tip)
+                let grad = ctx.createLinearGradient(0, canvas.height, 0, canvas.height - h);
+                grad.addColorStop(0, colorAccent);
+                grad.addColorStop(1, colorRed);
+                
+                ctx.fillStyle = grad;
+                ctx.globalAlpha = 0.9; // Higher opacity for dominance
+                ctx.fillRect(centerX + (i * (barWidth + gap)), canvas.height - h, barWidth, h);
+                ctx.fillRect(centerX - (i * (barWidth + gap)), canvas.height - h, barWidth, h);
+            }
+        } 
+        else if (vizMode === 1) {
+            // MODE 1: DOTTED DUAL WAVE (Accent primary, Red secondary)
+            ctx.setLineDash([3, 6]);
+            ctx.lineWidth = 3;
+            for (let j = 0; j < 2; j++) {
+                ctx.beginPath();
+                let x = 0, slice = canvas.width / (dataArray.length / 2);
+                for (let i = 0; i < dataArray.length / 2; i++) {
+                    const y = canvas.height - ((dataArray[i] / 255) * canvas.height) - (j * 15);
+                    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                    x += slice;
+                }
+                // J=0 is the main wave, J=1 is the shadow
+                ctx.strokeStyle = (j === 0) ? colorAccent : colorRed;
+                ctx.globalAlpha = (j === 0) ? 1.0 : 0.4; // Accent is full brightness
+                ctx.stroke();
+            }
+            ctx.setLineDash([]); 
+        }
+        else if (vizMode === 2) {
+            // MODE 2: MIRROR RIPPLE (Accent Top, Red Bottom Reflection)
+            ctx.lineWidth = 2;
+            const centerY = canvas.height / 2;
+            
+            // Top (Accent - Dominant)
+            ctx.beginPath();
+            ctx.strokeStyle = colorAccent;
+            for (let i = 0; i < dataArray.length / 2; i++) {
+                const v = (dataArray[i] / 255) * (canvas.height / 2);
+                const x = i * (canvas.width / (dataArray.length / 2));
+                if (i === 0) ctx.moveTo(x, centerY - v); else ctx.lineTo(x, centerY - v);
+            }
+            ctx.globalAlpha = 1.0;
+            ctx.stroke();
+
+            // Bottom (Red - Subtle Reflection)
+            ctx.beginPath();
+            ctx.strokeStyle = colorRed;
+            for (let i = 0; i < dataArray.length / 2; i++) {
+                const v = (dataArray[i] / 255) * (canvas.height / 2);
+                const x = i * (canvas.width / (dataArray.length / 2));
+                if (i === 0) ctx.moveTo(x, centerY + v); else ctx.lineTo(x, centerY + v);
+            }
+            ctx.globalAlpha = 0.3; // Low alpha for red to make accent pop
+            ctx.stroke();
+        }
+    }
+
+    document.getElementById('mode-switch').onclick = () => document.body.classList.toggle('dark-mode');
+});
+    </script>
+</body>
+</html>
