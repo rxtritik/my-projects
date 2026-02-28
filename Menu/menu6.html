@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>3D Bottom Navigation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+<style>
+:root{
+  --accent:#4da3ff;
+  --glow:rgba(77,163,255,.55);
+  --page-bg: radial-gradient(1200px 600px at 50% -200px,#162235,#05070b);
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  height:100%;
+  margin:0;
+  background:var(--page-bg);
+  transition:background .6s ease;
+  font-family:system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color:#fff;
+}
+
+.app{
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding-bottom:110px;
+  gap:.5rem;
+}
+
+#tabText{
+  font-size:1.2rem;
+  font-weight:600;
+  letter-spacing:.04em;
+  color:var(--accent);
+  transition:color .4s ease;
+  opacity:.9;
+}
+
+
+.bottom-nav{
+  position:fixed;
+  left:50%;
+  bottom:40%;
+  transform:translateX(-50%);
+  width:min(92vw,420px);
+  height:74px;
+
+  background:linear-gradient(180deg,#131c2a,#0b121d);
+  border-radius:24px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+
+  perspective:900px;
+  box-shadow:
+    0 25px 60px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.nav-item{
+  all:unset;
+  width:58px;
+  height:58px;
+  cursor:pointer;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:16px;
+  position:relative;
+
+  transform-style:preserve-3d;
+  transition:
+    transform .45s cubic-bezier(.2,.8,.2,1),
+    box-shadow .45s ease,
+    filter .45s ease,
+    background .3s ease;
+}
+
+.nav-item i{
+  font-size:26px;
+  color:#c9d3e4;
+  transform:translateZ(0);
+  transition:
+    transform .45s cubic-bezier(.2,.8,.2,1),
+    color .3s ease;
+  backface-visibility:hidden;
+}
+
+/* Floating light */
+.nav-item::after{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border-radius:14px;
+  background:radial-gradient(circle at 50% 30%,var(--glow),transparent 70%);
+  opacity:0;
+  filter:blur(10px);
+  transform:translateZ(-1px);
+  transition:opacity .4s ease;
+  pointer-events:none;
+}
+
+/* -------------------------------
+   Active 3D state
+--------------------------------*/
+.nav-item.active{
+  background:linear-gradient(180deg,#1a2a44,#0e1a2d);
+  transform:
+    translateY(-10px)
+    translateZ(24px)
+    rotateX(18deg);
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.6),
+    0 0 24px var(--glow);
+  filter:brightness(1.15);
+}
+
+.nav-item.active i{
+  color:var(--accent);
+  transform:
+    translateZ(28px)
+    rotateX(-18deg);
+}
+
+.nav-item.active::after{
+  opacity:1;
+}
+
+/* press */
+.nav-item:active{
+  transform:
+    translateY(-6px)
+    translateZ(16px)
+    rotateX(10deg) scale(.97);
+}
+
+.nav-item:focus{outline:none;}
+
+@media (min-width:768px){
+  .bottom-nav{ height:78px; }
+  .nav-item{ width:60px;height:60px; }
+}
+@media (min-width:1024px){
+  .bottom-nav{ width:420px; }
+}
+</style>
+</head>
+<body>
+
+<main class="app">
+  <div id="tabText">Home</div>
+</main>
+
+<nav class="bottom-nav">
+
+  <button class="nav-item" data-tab="home">
+    <i class='bx bx-home'></i>
+  </button>
+
+  <button class="nav-item" data-tab="search">
+    <i class='bx bx-search'></i>
+  </button>
+
+  <button class="nav-item" data-tab="add">
+    <i class='bx bx-plus-circle'></i>
+  </button>
+
+  <button class="nav-item" data-tab="notify">
+    <i class='bx bx-bell'></i>
+  </button>
+
+  <button class="nav-item" data-tab="profile">
+    <i class='bx bx-user'></i>
+  </button>
+
+</nav>
+
+<script>
+(function(){
+
+  const STORAGE_KEY = "nav3d-active";
+  const BG_KEY      = "nav3d-bg";
+  const COLOR_KEY   = "nav3d-color";
+  const TEXT_KEY    = "nav3d-text";
+
+  const items   = document.querySelectorAll(".nav-item");
+  const tabText = document.getElementById("tabText");
+
+  const config = {
+    home:{
+      text:"Home",
+      color:"#4da3ff",
+      glow:"rgba(77,163,255,.55)",
+      bg:"radial-gradient(1200px 600px at 50% -200px,#162235,#05070b)"
+    },
+    search:{
+      text:"Search",
+      color:"#4dffd2",
+      glow:"rgba(77,255,210,.55)",
+      bg:"radial-gradient(1200px 600px at 50% -200px,#1f2b2a,#05090a)"
+    },
+    add:{
+      text:"Create",
+      color:"#c77dff",
+      glow:"rgba(199,125,255,.55)",
+      bg:"radial-gradient(1200px 600px at 50% -200px,#2a1f33,#07050b)"
+    },
+    notify:{
+      text:"Alerts",
+      color:"#ffd166",
+      glow:"rgba(255,209,102,.55)",
+      bg:"radial-gradient(1200px 600px at 50% -200px,#2a2418,#080706)"
+    },
+    profile:{
+      text:"Profile",
+      color:"#6ae3ff",
+      glow:"rgba(106,227,255,.55)",
+      bg:"radial-gradient(1200px 600px at 50% -200px,#1b2533,#05070b)"
+    }
+  };
+
+  function applyVisual(tab){
+    const cfg = config[tab] || config.home;
+
+    document.documentElement.style.setProperty("--accent", cfg.color);
+    document.documentElement.style.setProperty("--glow", cfg.glow);
+    document.documentElement.style.setProperty("--page-bg", cfg.bg);
+
+    tabText.textContent = cfg.text;
+
+    localStorage.setItem(BG_KEY, cfg.bg);
+    localStorage.setItem(COLOR_KEY, JSON.stringify({
+      color: cfg.color,
+      glow: cfg.glow
+    }));
+    localStorage.setItem(TEXT_KEY, cfg.text);
+  }
+
+  function setActive(tab){
+    items.forEach(btn=>{
+      btn.classList.toggle("active", btn.dataset.tab === tab);
+    });
+
+    localStorage.setItem(STORAGE_KEY, tab);
+    applyVisual(tab);
+  }
+
+  function init(){
+
+    const savedTab = localStorage.getItem(STORAGE_KEY) || "home";
+    const savedBg  = localStorage.getItem(BG_KEY);
+    const savedCol = localStorage.getItem(COLOR_KEY);
+    const savedTxt = localStorage.getItem(TEXT_KEY);
+
+    if(savedBg)
+      document.documentElement.style.setProperty("--page-bg", savedBg);
+
+    if(savedCol){
+      const c = JSON.parse(savedCol);
+      document.documentElement.style.setProperty("--accent", c.color);
+      document.documentElement.style.setProperty("--glow", c.glow);
+    }
+
+    if(savedTxt)
+      tabText.textContent = savedTxt;
+
+    setActive(savedTab);
+  }
+
+  items.forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      setActive(btn.dataset.tab);
+    });
+  });
+
+  init();
+
+})();
+</script>
+
+</body>
+</html>
