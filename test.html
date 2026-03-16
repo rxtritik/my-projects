@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mist OS — Download & Flash</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{color-scheme: light dark}
+  html,body,#app{height:100%}
+  body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}
+  * { -webkit-tap-highlight-color: transparent; }
+  
+  :focus { outline: 3px solid rgba(59,130,246,0.25); outline-offset: 2px; }
+  .backdrop-blur { backdrop-filter: blur(4px); }
+  .toast-enter { transform: translateY(8px); opacity: 0 }
+  .toast-show { transform: translateY(0); opacity: 1; transition: all 220ms ease }
+  .btn-press:active { transform: translateY(1px) scale(0.998); }
+</style>
+</head>
+<body class="antialiased bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+<div id="app" class="min-h-screen flex flex-col items-center p-4 sm:p-6">
+  <header class="w-full max-w-xl">
+    <div class="flex items-center gap-3">
+      <img id="avatar" src="https://avatars.dicebear.com/api/identicon/RXT.svg" alt="avatar" class="w-16 h-16 rounded-full ring-2 ring-offset-2 ring-slate-200 dark:ring-slate-700 shrink-0" />
+      <div class="flex-1 min-w-0">
+        <h1 class="text-xl font-semibold leading-tight truncate">Ritik — Mist OS</h1>
+        <p class="text-sm text-slate-600 dark:text-slate-300/70 truncate">Download links • flashing steps • mirrors</p>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="themeToggle" aria-label="Toggle theme" class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
+          <svg id="themeIcon" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-8.66h-1M4.34 12.34h-1M18.36 5.64l-.7.7M6.34 17.66l-.7.7M18.36 18.36l-.7-.7M6.34 6.34l-.7-.7M12 7a5 5 0 100 10 5 5 0 000-10z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="w-full max-w-xl mt-6 flex-1">
+    <section class="bg-white dark:bg-slate-800 shadow-sm rounded-2xl p-4 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-semibold">Get Mist OS</h2>
+          <p class="text-sm text-slate-600 dark:text-slate-300/70 mt-1">Official builds and easy flashing steps.</p>
+        </div>
+        <div class="flex flex-wrap gap-3 shrink-0">
+          <button id="downloadBtn" class="btn-press inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 focus-visible:ring-4 focus-visible:ring-emerald-400 text-white rounded-lg shadow-sm">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v12m0 0l4-4m-4 4l-4-4M21 21H3"/></svg>
+            Download
+          </button>
+          <button id="guideToggle" class="btn-press inline-flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 focus-visible:ring-4 focus-visible:ring-slate-200">
+            Flashing Guide
+          </button>
+        </div>
+      </div>
+
+      <div id="linksGrid" class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+
+      <div class="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="text-xs text-slate-500 dark:text-slate-400">Tip: tap a link card to open it.</div>
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <button id="copyAllBtn" class="px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">Copy All Links</button>
+          <a href="#" id="repoLink" class="text-xs text-slate-500 hover:underline" target="_blank" rel="noopener">
+            Repo
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="guideSection" class="mt-4">
+      <div class="bg-white dark:bg-slate-800 shadow-sm rounded-2xl p-4 sm:p-6">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="font-semibold">Flashing Guide</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300/70 mt-1">Step-by-step instructions.</p>
+          </div>
+          <div class="text-sm text-slate-500 shrink-0">Progress: <span id="progressPct">0%</span></div>
+        </div>
+
+        <ol id="stepsList" class="mt-4 space-y-3"></ol>
+
+        <div class="mt-4 flex flex-wrap gap-2">
+          <button id="resetChecklist" class="px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-lg text-sm">Reset</button>
+          <button id="printGuide" class="px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm">Print</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="mt-6 text-center text-xs text-slate-500">
+      Built with ❤️ • Replace links & steps to match your project
+    </footer>
+  </main>
+</div>
+
+<div id="downloadModal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+  <div class="absolute inset-0 bg-black/40 backdrop-blur" data-close="true"></div>
+  <div role="dialog" aria-modal="true" aria-labelledby="downloadTitle" class="relative w-full max-w-md mx-4">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl">
+      <div class="flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          <h4 id="downloadTitle" class="font-semibold truncate">Download Mist OS</h4>
+          <p class="text-sm text-slate-600 dark:text-slate-300/70 mt-1">Choose a mirror or copy the direct link.</p>
+        </div>
+        <button id="modalClose" class="p-2 shrink-0 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700" aria-label="Close">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="mt-4 space-y-3">
+        <div class="rounded-lg border border-slate-200 dark:border-slate-700 p-3">
+          <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0 flex-1">
+              <div class="text-xs text-slate-500">Primary</div>
+              <div id="primaryLink" class="truncate text-sm font-medium">https://example.com/mist-os-<span id="versionSpan">vX.Y.Z</span>.zip</div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button id="copyPrimary" class="px-3 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-sm">Copy</button>
+              <a id="openPrimary" class="px-3 py-1 rounded-md bg-emerald-600 text-white text-sm" href="#" target="_blank" rel="noreferrer">Open</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-lg border border-slate-200 dark:border-slate-700 p-3">
+          <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0 flex-1">
+              <div class="text-xs text-slate-500 mb-1">SHA256</div>
+              <div id="shaText" class="text-sm font-mono text-slate-700 dark:text-slate-200 break-all leading-relaxed">b7a1...placeholder</div>
+            </div>
+            <div class="shrink-0">
+              <button id="copySha" class="px-3 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-sm">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-xs text-slate-500 mb-2">Mirrors</div>
+          <div id="mirrorsList" class="grid gap-2"></div>
+        </div>
+      </div>
+
+      <div class="mt-4 flex flex-wrap items-center gap-2">
+        <button id="startDownload" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm">Start (simulate)</button>
+        <button id="closeBtn" class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm">Close</button>
+      </div>
+
+      <div id="downloadProgress" class="mt-3 hidden">
+        <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+          <div id="progressBar" class="h-2 rounded-full bg-emerald-500 w-0 transition-all duration-300"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 items-center pointer-events-none"></div>
+
+<script>
+  const MIST_DOWNLOAD_URL = "https://github.com/rxtritik";
+  const MIST_SHA256 = "b7a1c4d2e3f4a5b6c7d8e9f0aabbccddeeff00112233445566778899aabbccdd";
+  const VERSION = "vX.Y.Z";
+
+  const LINKS = [
+    { id: "github", label: "Source / Releases", url: "https://github.com/rxtritik", icon: "repo" },
+    { id: "website", label: "Project Site", url: "https://mistos.example.com", icon: "globe" },
+    { id: "xda", label: "XDA Thread", url: "https://forum.example.com/threads/mist-os", icon: "chat" },
+    { id: "telegram", label: "Telegram", url: "https://t.me/mistos", icon: "message" },
+    { id: "donate", label: "Donate", url: "https://payme.com/rxt", icon: "heart" },
+    { id: "mirror", label: "Mirror", url: "https://mirror.example.com/mist-os.zip", icon: "mirror" }
+  ];
+
+  const FLASHING_STEPS = [
+    "Unlock bootloader of your device (this will wipe data).",
+    "Install ADB & Fastboot on your PC.",
+    "Reboot device into bootloader: adb reboot bootloader",
+    "Flash recovery: fastboot flash recovery recovery.img",
+    "Boot into recovery and sideload the zip: adb sideload mist-os-v.zip",
+    "Wipe cache/dalvik, then reboot system."
+  ];
+
+  const LS_CHECKLIST = "mist_checklist_v1";
+  const LS_THEME = "mist_theme_pref";
+
+  const linksGrid = document.getElementById("linksGrid");
+  const repoLink = document.getElementById("repoLink");
+  const copyAllBtn = document.getElementById("copyAllBtn");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const downloadModal = document.getElementById("downloadModal");
+  const modalClose = document.getElementById("modalClose");
+  const closeBtn = document.getElementById("closeBtn");
+  const copyPrimary = document.getElementById("copyPrimary");
+  const openPrimary = document.getElementById("openPrimary");
+  const primaryLink = document.getElementById("primaryLink");
+  const shaText = document.getElementById("shaText");
+  const copySha = document.getElementById("copySha");
+  const mirrorsList = document.getElementById("mirrorsList");
+  const startDownload = document.getElementById("startDownload");
+  const downloadProgress = document.getElementById("downloadProgress");
+  const progressBar = document.getElementById("progressBar");
+  const toastContainer = document.getElementById("toastContainer");
+  const stepsList = document.getElementById("stepsList");
+  const guideToggle = document.getElementById("guideToggle");
+  const resetChecklist = document.getElementById("resetChecklist");
+  const printGuide = document.getElementById("printGuide");
+  const progressPct = document.getElementById("progressPct");
+  const themeToggle = document.getElementById("themeToggle");
+  const themeIcon = document.getElementById("themeIcon");
+  const versionSpan = document.getElementById("versionSpan");
+
+  function init() {
+    versionSpan.textContent = VERSION;
+    primaryLink.textContent = MIST_DOWNLOAD_URL;
+    primaryLink.href = MIST_DOWNLOAD_URL;
+    openPrimary.href = MIST_DOWNLOAD_URL;
+    shaText.textContent = MIST_SHA256;
+    repoLink.href = LINKS[0].url;
+
+    renderLinks();
+    renderMirrors();
+    renderSteps();
+    applyThemeFromStorage();
+    bindUI();
+    updateProgressUI();
+  }
+
+  function renderLinks() {
+    linksGrid.innerHTML = "";
+    LINKS.forEach(link => {
+      const card = document.createElement("button");
+      card.className = "group flex flex-col items-start gap-2 p-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-transparent dark:border-slate-800 hover:scale-[1.01] transition transform shadow-sm w-full";
+      card.type = "button";
+      card.addEventListener("click", () => window.open(link.url, "_blank", "noopener"));
+
+      const label = document.createElement("div");
+      label.className = "flex items-center gap-3 w-full";
+      // Added min-w-0 to flex child for truncate, shrink-0 to buttons/icons
+      label.innerHTML = `
+        <div class="w-9 h-9 shrink-0 rounded-full flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-medium">
+          ${iconFor(link.icon)}
+        </div>
+        <div class="flex-1 text-left min-w-0">
+          <div class="text-sm font-medium truncate">${link.label}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 truncate">${link.url}</div>
+        </div>
+        <div class="ml-2 shrink-0">
+          <button data-id="${link.id}" class="copy-link px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800">Copy</button>
+        </div>
+      `;
+      card.appendChild(label);
+      linksGrid.appendChild(card);
+    });
+
+    linksGrid.querySelectorAll(".copy-link").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const id = e.currentTarget.dataset.id;
+        const lnk = LINKS.find(x => x.id === id);
+        copyText(lnk.url);
+      });
+    });
+  }
+
+  function renderMirrors() {
+    mirrorsList.innerHTML = "";
+    LINKS.filter(l => l.id === "mirror" || l.id === "github").forEach(m => {
+      const node = document.createElement("div");
+      node.className = "flex items-center justify-between border border-slate-200 dark:border-slate-700 rounded p-2 gap-2";
+      node.innerHTML = `
+        <div class="text-sm truncate flex-1">${m.label}</div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button class="text-xs px-2 py-1 border border-slate-200 dark:border-slate-700 rounded copy-mirror hover:bg-slate-50 dark:hover:bg-slate-700">Copy</button>
+          <a class="text-xs px-2 py-1 bg-emerald-600 text-white rounded open-mirror hover:bg-emerald-700" target="_blank" rel="noopener">Open</a>
+        </div>
+      `;
+      mirrorsList.appendChild(node);
+      node.querySelector(".copy-mirror").addEventListener("click", () => copyText(m.url));
+      node.querySelector(".open-mirror").href = m.url;
+    });
+  }
+
+  function renderSteps() {
+    stepsList.innerHTML = "";
+    const saved = loadChecklist();
+    FLASHING_STEPS.forEach((step, idx) => {
+      const id = `step-${idx}`;
+      const done = !!saved[id];
+      const li = document.createElement("li");
+      li.className = "flex items-start gap-3";
+      // Added shrink-0 to checkbox to prevent squishing
+      li.innerHTML = `
+        <input id="${id}" aria-label="Mark step ${idx+1}" type="checkbox" ${done ? "checked" : ""} class="mt-1 w-5 h-5 shrink-0 rounded-md bg-white border border-slate-300 dark:bg-slate-900 dark:border-slate-600 focus:ring-emerald-500 text-emerald-600"/>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm break-words ${done ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-200'}">${step}</div>
+          <div class="mt-2 flex flex-wrap gap-2">
+            <button data-step="${id}" class="copy-step px-2 py-1 text-xs border border-slate-200 dark:border-slate-700 rounded hover:bg-slate-50 dark:hover:bg-slate-800">Copy</button>
+            <button data-step="${id}" class="mark-step px-2 py-1 text-xs border border-slate-200 dark:border-slate-700 rounded hover:bg-slate-50 dark:hover:bg-slate-800">${done ? "Mark undone" : "Mark done"}</button>
+          </div>
+        </div>
+      `;
+      stepsList.appendChild(li);
+    });
+
+    stepsList.querySelectorAll(".copy-step").forEach(b => {
+      b.addEventListener("click", (e) => {
+        const stepText = FLASHING_STEPS[parseInt(e.currentTarget.dataset.step.split("-")[1])];
+        copyText(stepText, "Step copied");
+      });
+    });
+
+    stepsList.querySelectorAll(".mark-step").forEach(b => {
+      b.addEventListener("click", (e) => {
+        const id = e.currentTarget.dataset.step;
+        toggleChecklist(id);
+        renderSteps();
+        updateProgressUI();
+      });
+    });
+
+    stepsList.querySelectorAll("input[type='checkbox']").forEach(cb => {
+      cb.addEventListener("change", (e) => {
+        const id = e.target.id;
+        setChecklist(id, e.target.checked);
+        updateProgressUI();
+        renderSteps();
+      });
+    });
+
+    updateProgressUI();
+  }
+
+  function bindUI() {
+    copyAllBtn.addEventListener("click", () => {
+      const all = LINKS.map(l => `${l.label}: ${l.url}`).join("\\n");
+      copyText(all, "All links copied");
+    });
+
+    downloadBtn.addEventListener("click", openDownloadModal);
+    guideToggle.addEventListener("click", () => {
+      document.getElementById("guideSection").scrollIntoView({behavior:"smooth"});
+    });
+
+    modalClose.addEventListener("click", closeModal);
+    closeBtn.addEventListener("click", closeModal);
+    downloadModal.querySelector('[data-close="true"]').addEventListener("click", closeModal);
+
+    copyPrimary.addEventListener("click", () => copyText(MIST_DOWNLOAD_URL));
+    copySha.addEventListener("click", () => copyText(MIST_SHA256));
+    startDownload.addEventListener("click", simulateDownload);
+
+    resetChecklist.addEventListener("click", () => {
+      localStorage.removeItem(LS_CHECKLIST);
+      renderSteps();
+      updateProgressUI();
+      toast("Checklist reset");
+    });
+
+    printGuide.addEventListener("click", () => {
+      window.print();
+    });
+
+    themeToggle.addEventListener("click", () => {
+      const current = document.documentElement.classList.toggle("dark");
+      localStorage.setItem(LS_THEME, current ? "dark" : "light");
+      updateThemeIcon();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !downloadModal.classList.contains("hidden")) closeModal();
+    });
+  }
+
+  function openDownloadModal() {
+    downloadModal.classList.remove("hidden");
+    downloadModal.querySelector(".relative").focus();
+  }
+
+  function closeModal() {
+    downloadModal.classList.add("hidden");
+    resetProgress();
+  }
+
+  function simulateDownload() {
+    downloadProgress.classList.remove("hidden");
+    progressBar.style.width = "0%";
+    let p = 0;
+    const interval = setInterval(() => {
+      p += Math.random() * 12;
+      if (p > 100) p = 100;
+      progressBar.style.width = p + "%";
+      if (p >= 100) {
+        clearInterval(interval);
+        toast("Download simulation complete");
+      }
+    }, 350);
+  }
+
+  function resetProgress() {
+    downloadProgress.classList.add("hidden");
+    progressBar.style.width = "0%";
+  }
+
+  function copyText(text, alt = "Copied") {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => toast(alt));
+    } else {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      toast(alt);
+    }
+  }
+
+  function toast(msg = "Done") {
+    const el = document.createElement("div");
+    el.className = "toast-show bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-4 py-2 rounded-md shadow-md text-sm pointer-events-auto";
+    el.textContent = msg;
+    toastContainer.appendChild(el);
+    setTimeout(() => { 
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(8px)';
+      setTimeout(() => el.remove(), 250); 
+    }, 2500);
+  }
+
+  function loadChecklist() {
+    try {
+      return JSON.parse(localStorage.getItem(LS_CHECKLIST) || "{}");
+    } catch { return {}; }
+  }
+
+  function setChecklist(id, val) {
+    const s = loadChecklist();
+    s[id] = !!val;
+    localStorage.setItem(LS_CHECKLIST, JSON.stringify(s));
+  }
+
+  function toggleChecklist(id) {
+    const s = loadChecklist();
+    s[id] = !s[id];
+    localStorage.setItem(LS_CHECKLIST, JSON.stringify(s));
+  }
+
+  function updateProgressUI() {
+    const saved = loadChecklist();
+    const total = FLASHING_STEPS.length;
+    const done = Object.values(saved).filter(Boolean).length;
+    const pct = Math.round((done / total) * 100);
+    progressPct.textContent = pct + "%";
+  }
+
+  function iconFor(name) {
+    const map = {
+      repo: `<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`,
+      globe: `<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0zM2 12h20M12 2v20"/></svg>`,
+      chat: `<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>`,
+      message: `<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8z"/></svg>`,
+      heart: `<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 10-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 000-7.8z"/></svg>`,
+      mirror: `<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v20M2 12h20"/></svg>`
+    };
+    return map[name] || `<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2"/></svg>`;
+  }
+
+  function applyThemeFromStorage() {
+    const pref = localStorage.getItem(LS_THEME);
+    if (pref === "dark") {
+      document.documentElement.classList.add("dark");
+    } else if (pref === "light") {
+      document.documentElement.classList.remove("dark");
+    } else {
+      const dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (dark) document.documentElement.classList.add("dark");
+    }
+    updateThemeIcon();
+  }
+
+  function updateThemeIcon() {
+    const isDark = document.documentElement.classList.contains("dark");
+    themeIcon.innerHTML = isDark
+      ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>'
+      : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-8.66h-1M4.34 12.34h-1"/>';
+  }
+
+  init();
+</script>
+</body>
+  </html>
