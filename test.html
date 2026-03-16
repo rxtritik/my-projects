@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Mist OS — Download & Flash</title>
+<title>Ritik — Mist OS v4.5 | Download & Flash</title>
 <script src="https://cdn.tailwindcss.com">
   tailwind.config = {
     darkMode: 'class';
   }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{color-scheme: light dark}
   html,body,#app{height:100%}
@@ -32,7 +32,8 @@
       <img id="avatar" src="https://avatars.dicebear.com/api/identicon/RXT.svg" alt="avatar" class="w-16 h-16 rounded-full ring-2 ring-offset-2 ring-slate-200 dark:ring-slate-700 shrink-0" />
       <div class="flex-1 min-w-0">
         <h1 class="text-xl font-semibold leading-tight truncate">Ritik — Mist OS</h1>
-        <p class="text-sm text-slate-600 dark:text-slate-300/70 truncate">Download links • flashing steps • mirrors</p>
+        <p class="text-sm text-slate-600 dark:text-slate-300/80 truncate">Realme Narzo 10A / C3 • Android 16</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400/80 mt-0.5 truncate">v4.5 • Build: 15 Mar 2026 • Maintainer: @dantepaulxd</p>
       </div>
       <div class="flex items-center gap-2 shrink-0">
         <button id="themeToggle" aria-label="Toggle theme" class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
@@ -50,11 +51,11 @@
           <p class="text-sm text-slate-600 dark:text-slate-300/70 mt-1">Official builds and easy flashing steps.</p>
         </div>
         <div class="flex flex-wrap gap-3 shrink-0">
-          <button id="downloadBtn" class="btn-press inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 focus-visible:ring-4 focus-visible:ring-emerald-400 text-white rounded-lg shadow-sm">
+          <button id="downloadBtn" class="btn-press inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 focus-visible:ring-4 focus-visible:ring-emerald-400 text-white rounded-lg shadow-sm font-medium">
             <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v12m0 0l4-4m-4 4l-4-4M21 21H3"/></svg>
             Download
           </button>
-          <button id="guideToggle" class="btn-press inline-flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 focus-visible:ring-4 focus-visible:ring-slate-200">
+          <button id="guideToggle" class="btn-press inline-flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 focus-visible:ring-4 focus-visible:ring-slate-200 font-medium">
             Flashing Guide
           </button>
         </div>
@@ -65,10 +66,63 @@
       <div class="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div class="text-xs text-slate-500 dark:text-slate-400">Tip: tap a link card to open it.</div>
         <div class="flex flex-wrap items-center gap-2 text-xs">
-          <button id="copyAllBtn" class="px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">Copy All Links</button>
-          <a href="#" id="repoLink" class="text-xs text-slate-500 hover:underline" target="_blank" rel="noopener">
-            Repo
+          <button id="copyAllBtn" class="px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">Copy All Links</button>
+          <a href="#" id="repoLink" class="text-xs text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 hover:underline" target="_blank" rel="noopener">
+            TG Update
           </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="releaseNotes" class="mt-4">
+      <div class="bg-white dark:bg-slate-800 shadow-sm rounded-2xl p-4 sm:p-6">
+        <div>
+          <h3 class="font-semibold text-lg">Release Description</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">#mistos #android16 #baklava #qpr2</p>
+        </div>
+
+        <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="space-y-5">
+            <div>
+              <h4 class="font-medium flex items-center gap-2 text-slate-900 dark:text-white">
+                <span class="text-base">✨</span> Notes
+              </h4>
+              <ul class="mt-2 text-sm text-slate-600 dark:text-slate-300 space-y-1.5 list-none pl-1">
+                <li>• Initial release</li>
+                <li>• required firmware C.12</li>
+                <li>• Vanilla build (No GApps included)</li>
+                <li>• use nikgapps core / basic</li>
+                <li>• basic integrity passed & for device</li>
+                <li>• Latest Source changes</li>
+                <li>• <a href="https://t.me/dantepaulxd_ss/241?single" class="text-emerald-600 dark:text-emerald-400 hover:underline">Screenshots Here</a></li>
+                <li>• <a href="https://t.me/dantepaulxd_chats" target="_blank" class="text-emerald-600 dark:text-emerald-400 hover:underline">Support Group</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="font-medium flex items-center gap-2 text-slate-900 dark:text-white">
+                <span class="text-base">🐞</span> Known Issues
+              </h4>
+              <ul class="mt-2 text-sm text-slate-600 dark:text-slate-300 space-y-1.5 list-none pl-1">
+                <li>• egis / et512 fingerprint fix module</li>
+                <li>• Report other issues if found</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="space-y-5">
+            <div>
+              <h4 class="font-medium flex items-center gap-2 text-slate-900 dark:text-white">
+                <span class="text-base">❤️</span> Credits & Thanks
+              </h4>
+              <ul class="mt-2 text-sm text-slate-600 dark:text-slate-300 space-y-1.5 list-none pl-1">
+                <li>• szyryjn — Server</li>
+                <li>• koushikdey3 — Help</li>
+                <li>• sarthakroy2002 — DT</li>
+                <li>• Aintken — Test</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -77,23 +131,23 @@
       <div class="bg-white dark:bg-slate-800 shadow-sm rounded-2xl p-4 sm:p-6">
         <div class="flex items-start justify-between gap-4">
           <div>
-            <h3 class="font-semibold">Flashing Guide</h3>
+            <h3 class="font-semibold text-lg">Flashing Guide</h3>
             <p class="text-sm text-slate-600 dark:text-slate-300/70 mt-1">Step-by-step instructions.</p>
           </div>
-          <div class="text-sm text-slate-500 shrink-0">Progress: <span id="progressPct">0%</span></div>
+          <div class="text-sm text-slate-500 shrink-0 mt-1 border px-2 py-0.5 rounded-md dark:border-slate-700">Progress: <span id="progressPct" class="font-semibold">0%</span></div>
         </div>
 
-        <ol id="stepsList" class="mt-4 space-y-3"></ol>
+        <ol id="stepsList" class="mt-5 space-y-3"></ol>
 
-        <div class="mt-4 flex flex-wrap gap-2">
-          <button id="resetChecklist" class="px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-lg text-sm">Reset</button>
-          <button id="printGuide" class="px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm">Print</button>
+        <div class="mt-5 flex flex-wrap gap-2">
+          <button id="resetChecklist" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-lg text-sm font-medium transition-colors">Reset</button>
+          <button id="printGuide" class="px-4 py-2 border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors">Print</button>
         </div>
       </div>
     </section>
 
-    <footer class="mt-6 text-center text-xs text-slate-500">
-      Built with ❤️ •
+    <footer class="mt-6 mb-8 text-center text-xs text-slate-500">
+      Built with ❤️ • Mist OS Project
     </footer>
   </main>
 </div>
@@ -104,24 +158,24 @@
     <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl">
       <div class="flex items-start justify-between gap-3">
         <div class="min-w-0">
-          <h4 id="downloadTitle" class="font-semibold truncate">Download Mist OS</h4>
+          <h4 id="downloadTitle" class="font-semibold text-lg truncate">Download Mist OS</h4>
           <p class="text-sm text-slate-600 dark:text-slate-300/70 mt-1">Choose a mirror or copy the direct link.</p>
         </div>
-        <button id="modalClose" class="p-2 shrink-0 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700" aria-label="Close">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        <button id="modalClose" class="p-2 shrink-0 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" aria-label="Close">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
 
-      <div class="mt-4 space-y-3">
-        <div class="rounded-lg border border-slate-200 dark:border-slate-700 p-3">
+      <div class="mt-5 space-y-4">
+        <div class="rounded-lg border border-slate-200 dark:border-slate-700 p-3 bg-slate-50 dark:bg-slate-900/50">
           <div class="flex items-center justify-between gap-2">
             <div class="min-w-0 flex-1">
-              <div class="text-xs text-slate-500">Primary</div>
-              <div id="primaryLink" class="truncate text-sm font-medium">https://example.com/mist-os-<span id="versionSpan">vX.Y.Z</span>.zip</div>
+              <div class="text-xs text-slate-500 font-medium">Primary Source</div>
+              <div id="primaryLink" class="truncate text-sm font-medium mt-0.5">https://example.com/mist-os-<span id="versionSpan">vX.Y.Z</span>.zip</div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button id="copyPrimary" class="px-3 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-sm">Copy</button>
-              <a id="openPrimary" class="px-3 py-1 rounded-md bg-emerald-600 text-white text-sm" href="#" target="_blank" rel="noreferrer">Open</a>
+              <button id="copyPrimary" class="px-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-white dark:hover:bg-slate-800 transition-colors">Copy</button>
+              <a id="openPrimary" class="px-3 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium transition-colors" href="#" target="_blank" rel="noreferrer">Open</a>
             </div>
           </div>
         </div>
@@ -129,24 +183,23 @@
         <div class="rounded-lg border border-slate-200 dark:border-slate-700 p-3">
           <div class="flex items-center justify-between gap-2">
             <div class="min-w-0 flex-1">
-              <div class="text-xs text-slate-500 mb-1">SHA256</div>
+              <div class="text-xs text-slate-500 font-medium mb-1">SHA256</div>
               <div id="shaText" class="text-sm font-mono text-slate-700 dark:text-slate-200 break-all leading-relaxed">b7a1...placeholder</div>
             </div>
             <div class="shrink-0">
-              <button id="copySha" class="px-3 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-sm">Copy</button>
+              <button id="copySha" class="px-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Copy</button>
             </div>
           </div>
         </div>
 
         <div>
-          <div class="text-xs text-slate-500 mb-2">Mirrors</div>
+          <div class="text-xs text-slate-500 font-medium mb-2 uppercase tracking-wider">Download Mirrors</div>
           <div id="mirrorsList" class="grid gap-2"></div>
         </div>
       </div>
 
-      <div class="mt-4 flex flex-wrap items-center gap-2">
-<!-- <button id="startDownload" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm">Start (simulate)</button> -->
-        <button id="closeBtn" class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm">Close</button>
+      <div class="mt-5 flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-700">
+        <button id="closeBtn" class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Close</button>
       </div>
 
       <div id="downloadProgress" class="mt-3 hidden">
@@ -161,25 +214,25 @@
 <div id="toastContainer" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 items-center pointer-events-none"></div>
 
 <script>
-  const MIST_DOWNLOAD_URL = "https://drive.usercontent.google.com/download?id=1B1qKPrNFFLLOP_mdamJlkg4ynICIFvdJ&export=download&authuser=0";
-  const MIST_SHA256 = "b7a1c4d2e3f4a5b6c7d8e9f0aabbccddeeff00112233445566778899aabbccdd";
-  const VERSION = "vX.Y.Z";
+  const MIST_DOWNLOAD_URL = "https://t.me/MistOSUpdate"; 
+  const MIST_SHA256 = "Wait for direct link update...";
+  const VERSION = "v4.5";
 
-  const LINKS = [
-    { id: "github", label: "Changlogs", url: "https://t.me/MistOSDiscussion/33157", icon: "repo" },
-    { id: "website", label: "Project Site", url: "https://t.me/MistOSUpdate", icon: "globe" },
-    { id: "telegram", label: "Support Group", url: "https://t.me/dantepaulxd_chats", icon: "message" },
-    { id: "donate", label: "Donate", url: "rxtritik@ptsbi", icon: "heart" },
-    { id: "mirror", label: "Mirror", url: "https://t.me/dantepaulxd_chats/2296", icon: "mirror" }
+  const LINKS =[
+    { id: "rom_tg", label: "Mist OS ROM | TG", url: "https://t.me/MistOSUpdate", icon: "globe" },
+    { id: "nikgapps", label: "NikGApps Core", url: "https://nikgapps.com/", icon: "repo" },
+    { id: "boot", label: "Mist OS Boot", url: "https://t.me/dantepaulxd_chats/2286", icon: "mirror" },
+    { id: "recovery", label: "Mist OS Recovery", url: "https://t.me/dantepaulxd_chats/2288", icon: "mirror" },
+    { id: "support", label: "Support Group", url: "https://t.me/dantepaulxd_chats", icon: "message" }
   ];
 
-  const FLASHING_STEPS = [
+  const FLASHING_STEPS =[
     "Reboot to recovery",
-"Flash Mist OS ROM",
-"Flash NikGApps Core",
-"Flash KernelSU (optional)",
-"Wipe & Format Data",
-"Reboot to system"
+    "Flash Mist OS ROM",
+    "Flash NikGApps Core",
+    "Flash KernelSU (optional)",
+    "Wipe & Format Data",
+    "Reboot to system"
   ];
 
   const LS_CHECKLIST = "mist_checklist_v1";
@@ -198,7 +251,6 @@
   const shaText = document.getElementById("shaText");
   const copySha = document.getElementById("copySha");
   const mirrorsList = document.getElementById("mirrorsList");
-  const startDownload = document.getElementById("startDownload");
   const downloadProgress = document.getElementById("downloadProgress");
   const progressBar = document.getElementById("progressBar");
   const toastContainer = document.getElementById("toastContainer");
@@ -231,23 +283,22 @@
     linksGrid.innerHTML = "";
     LINKS.forEach(link => {
       const card = document.createElement("button");
-      card.className = "group flex flex-col items-start gap-2 p-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-transparent dark:border-slate-800 hover:scale-[1.01] transition transform shadow-sm w-full";
+      card.className = "group flex flex-col items-start gap-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800 hover:scale-[1.01] hover:border-emerald-500/30 transition transform shadow-sm w-full";
       card.type = "button";
       card.addEventListener("click", () => window.open(link.url, "_blank", "noopener"));
 
       const label = document.createElement("div");
       label.className = "flex items-center gap-3 w-full";
-      // Added min-w-0 to flex child for truncate, shrink-0 to buttons/icons
       label.innerHTML = `
-        <div class="w-9 h-9 shrink-0 rounded-full flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-medium">
+        <div class="w-9 h-9 shrink-0 rounded-full flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-medium shadow-sm group-hover:text-emerald-500 transition-colors">
           ${iconFor(link.icon)}
         </div>
         <div class="flex-1 text-left min-w-0">
           <div class="text-sm font-medium truncate">${link.label}</div>
-          <div class="text-xs text-slate-500 dark:text-slate-400 truncate">${link.url}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">${link.url !== '#' ? link.url : 'Link Pending'}</div>
         </div>
         <div class="ml-2 shrink-0">
-          <button data-id="${link.id}" class="copy-link px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800">Copy</button>
+          <button data-id="${link.id}" class="copy-link px-2.5 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">Copy</button>
         </div>
       `;
       card.appendChild(label);
@@ -266,14 +317,14 @@
 
   function renderMirrors() {
     mirrorsList.innerHTML = "";
-    LINKS.filter(l => l.id === "mirror" || l.id === "github").forEach(m => {
+    LINKS.filter(l =>["rom_tg", "boot", "recovery"].includes(l.id)).forEach(m => {
       const node = document.createElement("div");
-      node.className = "flex items-center justify-between border border-slate-200 dark:border-slate-700 rounded p-2 gap-2";
+      node.className = "flex items-center justify-between border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 gap-2 bg-slate-50/50 dark:bg-slate-800/50";
       node.innerHTML = `
-        <div class="text-sm truncate flex-1">${m.label}</div>
+        <div class="text-sm font-medium truncate flex-1">${m.label}</div>
         <div class="flex items-center gap-2 shrink-0">
-          <button class="text-xs px-2 py-1 border border-slate-200 dark:border-slate-700 rounded copy-mirror hover:bg-slate-50 dark:hover:bg-slate-700">Copy</button>
-          <a class="text-xs px-2 py-1 bg-emerald-600 text-white rounded open-mirror hover:bg-emerald-700" target="_blank" rel="noopener">Open</a>
+          <button class="text-xs px-2.5 py-1.5 border border-slate-200 dark:border-slate-700 rounded-md copy-mirror hover:bg-white dark:hover:bg-slate-700 transition-colors font-medium">Copy</button>
+          <a class="text-xs px-2.5 py-1.5 bg-emerald-600 text-white rounded-md open-mirror hover:bg-emerald-700 transition-colors font-medium" target="_blank" rel="noopener">Open</a>
         </div>
       `;
       mirrorsList.appendChild(node);
@@ -289,15 +340,13 @@
       const id = `step-${idx}`;
       const done = !!saved[id];
       const li = document.createElement("li");
-      li.className = "flex items-start gap-3";
-      // Added shrink-0 to checkbox to prevent squishing
+      li.className = `flex items-start gap-3 p-3 rounded-lg border ${done ? 'bg-slate-50 border-slate-100 dark:bg-slate-900/50 dark:border-slate-800/50' : 'bg-white border-slate-200 dark:bg-slate-800 dark:border-slate-700'} transition-colors`;
       li.innerHTML = `
-        <input id="${id}" aria-label="Mark step ${idx+1}" type="checkbox" ${done ? "checked" : ""} class="mt-1 w-5 h-5 shrink-0 rounded-md bg-white border border-slate-300 dark:bg-slate-900 dark:border-slate-600 focus:ring-emerald-500 text-emerald-600"/>
+        <input id="${id}" aria-label="Mark step ${idx+1}" type="checkbox" ${done ? "checked" : ""} class="mt-0.5 w-5 h-5 shrink-0 rounded-md bg-white border border-slate-300 dark:bg-slate-900 dark:border-slate-600 focus:ring-emerald-500 text-emerald-600 transition-all cursor-pointer"/>
         <div class="flex-1 min-w-0">
-          <div class="text-sm break-words ${done ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-200'}">${step}</div>
+          <label for="${id}" class="text-sm font-medium block cursor-pointer select-none break-words ${done ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-200'}">${step}</label>
           <div class="mt-2 flex flex-wrap gap-2">
-            <button data-step="${id}" class="copy-step px-2 py-1 text-xs border border-slate-200 dark:border-slate-700 rounded hover:bg-slate-50 dark:hover:bg-slate-800">Copy</button>
-            <button data-step="${id}" class="mark-step px-2 py-1 text-xs border border-slate-200 dark:border-slate-700 rounded hover:bg-slate-50 dark:hover:bg-slate-800">${done ? "Mark undone" : "Mark done"}</button>
+            <button data-step="${id}" class="copy-step px-2.5 py-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors font-medium">Copy Text</button>
           </div>
         </div>
       `;
@@ -308,15 +357,6 @@
       b.addEventListener("click", (e) => {
         const stepText = FLASHING_STEPS[parseInt(e.currentTarget.dataset.step.split("-")[1])];
         copyText(stepText, "Step copied");
-      });
-    });
-
-    stepsList.querySelectorAll(".mark-step").forEach(b => {
-      b.addEventListener("click", (e) => {
-        const id = e.currentTarget.dataset.step;
-        toggleChecklist(id);
-        renderSteps();
-        updateProgressUI();
       });
     });
 
@@ -334,7 +374,7 @@
 
   function bindUI() {
     copyAllBtn.addEventListener("click", () => {
-      const all = LINKS.map(l => `${l.label}: ${l.url}`).join("\\n");
+      const all = LINKS.map(l => `${l.label}: ${l.url}`).join("\n");
       copyText(all, "All links copied");
     });
 
@@ -349,7 +389,6 @@
 
     copyPrimary.addEventListener("click", () => copyText(MIST_DOWNLOAD_URL));
     copySha.addEventListener("click", () => copyText(MIST_SHA256));
-    startDownload.addEventListener("click", simulateDownload);
 
     resetChecklist.addEventListener("click", () => {
       localStorage.removeItem(LS_CHECKLIST);
@@ -380,27 +419,6 @@
 
   function closeModal() {
     downloadModal.classList.add("hidden");
-    resetProgress();
-  }
-
-  function simulateDownload() {
-    downloadProgress.classList.remove("hidden");
-    progressBar.style.width = "0%";
-    let p = 0;
-    const interval = setInterval(() => {
-      p += Math.random() * 12;
-      if (p > 100) p = 100;
-      progressBar.style.width = p + "%";
-      if (p >= 100) {
-        clearInterval(interval);
-        toast("Download simulation complete");
-      }
-    }, 350);
-  }
-
-  function resetProgress() {
-    downloadProgress.classList.add("hidden");
-    progressBar.style.width = "0%";
   }
 
   function copyText(text, alt = "Copied") {
@@ -419,7 +437,7 @@
 
   function toast(msg = "Done") {
     const el = document.createElement("div");
-    el.className = "toast-show bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-4 py-2 rounded-md shadow-md text-sm pointer-events-auto";
+    el.className = "toast-show bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-4 py-2.5 rounded-lg shadow-lg font-medium text-sm pointer-events-auto";
     el.textContent = msg;
     toastContainer.appendChild(el);
     setTimeout(() => { 
@@ -441,18 +459,18 @@
     localStorage.setItem(LS_CHECKLIST, JSON.stringify(s));
   }
 
-  function toggleChecklist(id) {
-    const s = loadChecklist();
-    s[id] = !s[id];
-    localStorage.setItem(LS_CHECKLIST, JSON.stringify(s));
-  }
-
   function updateProgressUI() {
     const saved = loadChecklist();
     const total = FLASHING_STEPS.length;
     const done = Object.values(saved).filter(Boolean).length;
     const pct = Math.round((done / total) * 100);
     progressPct.textContent = pct + "%";
+    
+    if(pct === 100) {
+      progressPct.classList.add("text-emerald-600", "dark:text-emerald-400");
+    } else {
+      progressPct.classList.remove("text-emerald-600", "dark:text-emerald-400");
+    }
   }
 
   function iconFor(name) {
@@ -490,4 +508,4 @@
   init();
 </script>
 </body>
-  </html>
+</html>
