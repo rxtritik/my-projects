@@ -145,7 +145,7 @@
       </div>
 
       <div class="mt-4 flex flex-wrap items-center gap-2">
-        <button id="startDownload" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm">Start (simulate)</button>
+<!-- <button id="startDownload" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm">Start (simulate)</button> -->
         <button id="closeBtn" class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm">Close</button>
       </div>
 
@@ -161,25 +161,25 @@
 <div id="toastContainer" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 items-center pointer-events-none"></div>
 
 <script>
-  const MIST_DOWNLOAD_URL = "https://github.com/rxtritik";
+  const MIST_DOWNLOAD_URL = "https://drive.google.com/file/d/1B1qKPrNFFLLOP_mdamJlkg4ynICIFvdJ/view";
   const MIST_SHA256 = "b7a1c4d2e3f4a5b6c7d8e9f0aabbccddeeff00112233445566778899aabbccdd";
   const VERSION = "vX.Y.Z";
 
   const LINKS = [
-    { id: "github", label: "Changlogs", url: "https://github.com/rxtritik", icon: "repo" },
-    { id: "website", label: "Project Site", url: "https://mistos.example.com", icon: "globe" },
-    { id: "telegram", label: "Support Group", url: "https://t.me/mistos", icon: "message" },
-    { id: "donate", label: "Donate", url: "https://payme.com/rxt", icon: "heart" },
-    { id: "mirror", label: "Mirror", url: "https://mirror.example.com/mist-os.zip", icon: "mirror" }
+    { id: "github", label: "Changlogs", url: "https://t.me/MistOSDiscussion/33157", icon: "repo" },
+    { id: "website", label: "Project Site", url: "https://t.me/MistOSUpdate", icon: "globe" },
+    { id: "telegram", label: "Support Group", url: "https://t.me/dantepaulxd_chats", icon: "message" },
+    { id: "donate", label: "Donate", url: "rxtritik@ptsbi", icon: "heart" },
+    { id: "mirror", label: "Mirror", url: "https://t.me/dantepaulxd_chats/2296", icon: "mirror" }
   ];
 
   const FLASHING_STEPS = [
-    "Unlock bootloader of your device (this will wipe data).",
-    "Install ADB & Fastboot on your PC.",
-    "Reboot device into bootloader: adb reboot bootloader",
-    "Flash recovery: fastboot flash recovery recovery.img",
-    "Boot into recovery and sideload the zip: adb sideload mist-os-v.zip",
-    "Wipe cache/dalvik, then reboot system."
+    "Reboot to recovery",
+"Flash Mist OS ROM",
+"Flash NikGApps Core",
+"Flash KernelSU (optional)",
+"Wipe & Format Data",
+"Reboot to system"
   ];
 
   const LS_CHECKLIST = "mist_checklist_v1";
